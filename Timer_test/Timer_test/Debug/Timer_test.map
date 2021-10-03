@@ -2,8 +2,6 @@ Archive member included to satisfy reference by file (symbol)
 
 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
                               C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o (exit)
-c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
-                              main.o (__do_copy_data)
 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
                               main.o (__do_clear_bss)
 
@@ -14,7 +12,6 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
- .bss.cliFlag   0x00000000        0x2 main.o
  .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
@@ -31,22 +28,6 @@ Discarded input sections
                 0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .text.libgcc.fixed
                 0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
- .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.mul
-                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.div
-                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc   0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.prologue
-                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.builtins
-                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.fmul
-                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
- .text.libgcc.fixed
-                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
  .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
  .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
  .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
@@ -190,7 +171,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x140
+.text           0x00000000       0xf4
  *(.vectors)
  .vectors       0x00000000       0x68 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -231,10 +212,8 @@ END GROUP
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x00000074       0x16 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
-                0x00000074                __do_copy_data
- .init4         0x0000008a       0x10 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
-                0x0000008a                __do_clear_bss
+ .init4         0x00000074       0x10 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+                0x00000074                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -245,49 +224,47 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x0000009a        0x8 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
+ .init9         0x00000084        0x8 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
  *(.init9)
  *(.text)
- .text          0x000000a2        0x4 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
-                0x000000a2                __vector_22
-                0x000000a2                __vector_24
-                0x000000a2                __vector_12
-                0x000000a2                __bad_interrupt
-                0x000000a2                __vector_6
-                0x000000a2                __vector_3
-                0x000000a2                __vector_23
-                0x000000a2                __vector_25
-                0x000000a2                __vector_11
-                0x000000a2                __vector_13
-                0x000000a2                __vector_17
-                0x000000a2                __vector_19
-                0x000000a2                __vector_7
-                0x000000a2                __vector_5
-                0x000000a2                __vector_4
-                0x000000a2                __vector_9
-                0x000000a2                __vector_21
-                0x000000a2                __vector_15
-                0x000000a2                __vector_8
-                0x000000a2                __vector_14
-                0x000000a2                __vector_10
-                0x000000a2                __vector_16
-                0x000000a2                __vector_18
-                0x000000a2                __vector_20
-                0x000000a6                . = ALIGN (0x2)
+ .text          0x0000008c        0x4 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
+                0x0000008c                __vector_22
+                0x0000008c                __vector_1
+                0x0000008c                __vector_24
+                0x0000008c                __vector_12
+                0x0000008c                __bad_interrupt
+                0x0000008c                __vector_6
+                0x0000008c                __vector_3
+                0x0000008c                __vector_23
+                0x0000008c                __vector_25
+                0x0000008c                __vector_11
+                0x0000008c                __vector_13
+                0x0000008c                __vector_17
+                0x0000008c                __vector_19
+                0x0000008c                __vector_7
+                0x0000008c                __vector_5
+                0x0000008c                __vector_4
+                0x0000008c                __vector_9
+                0x0000008c                __vector_2
+                0x0000008c                __vector_21
+                0x0000008c                __vector_15
+                0x0000008c                __vector_8
+                0x0000008c                __vector_10
+                0x0000008c                __vector_16
+                0x0000008c                __vector_18
+                0x0000008c                __vector_20
+                0x00000090                . = ALIGN (0x2)
  *(.text.*)
- .text.__vector_1
-                0x000000a6       0x32 main.o
-                0x000000a6                __vector_1
- .text.__vector_2
-                0x000000d8       0x32 main.o
-                0x000000d8                __vector_2
- .text.main     0x0000010a       0x32 main.o
-                0x0000010a                main
-                0x0000013c                . = ALIGN (0x2)
+ .text.main     0x00000090       0x18 main.o
+                0x00000090                main
+ .text.__vector_14
+                0x000000a8       0x48 main.o
+                0x000000a8                __vector_14
+                0x000000f0                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000013c        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x0000013c                _exit
-                0x0000013c                exit
+ .fini9         0x000000f0        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000000f0                _exit
+                0x000000f0                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -306,33 +283,32 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000013c        0x4 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000000f0        0x4 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000140                _etext = .
+                0x000000f4                _etext = .
 
-.data           0x00800100        0x2 load address 0x00000140
-                0x00800100                PROVIDE (__data_start, .)
+.data           0x00800100        0x0 load address 0x000000f4
+                [!provide]                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
- .data.counter  0x00800100        0x1 main.o
-                0x00800100                counter
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.r*)
-                0x00800102                . = ALIGN (0x2)
- *fill*         0x00800101        0x1 
-                0x00800102                _edata = .
-                0x00800102                PROVIDE (__data_end, .)
+                0x00800100                . = ALIGN (0x2)
+                0x00800100                _edata = .
+                [!provide]                PROVIDE (__data_end, .)
 
-.bss            0x00800102        0x0
-                0x00800102                PROVIDE (__bss_start, .)
+.bss            0x00800100        0x2
+                0x00800100                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
+ .bss.timeVar   0x00800100        0x2 main.o
+                0x00800100                timeVar
  *(COMMON)
                 0x00800102                PROVIDE (__bss_end, .)
-                0x00000140                __data_load_start = LOADADDR (.data)
-                0x00000142                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000000f4                __data_load_start = LOADADDR (.data)
+                0x000000f4                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800102        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -403,42 +379,42 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x30
+.debug_aranges  0x00000000       0x28
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x30 main.o
+                0x00000000       0x28 main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x6d1
+.debug_info     0x00000000      0x6a4
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_info    0x000005f4       0xdd main.o
+ .debug_info    0x000005f4       0xb0 main.o
 
-.debug_abbrev   0x00000000      0x628
+.debug_abbrev   0x00000000      0x621
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_abbrev  0x000005a2       0x86 main.o
+ .debug_abbrev  0x000005a2       0x7f main.o
 
-.debug_line     0x00000000      0x24a
+.debug_line     0x00000000      0x214
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000134      0x116 main.o
+ .debug_line    0x00000134       0xe0 main.o
 
-.debug_frame    0x00000000       0x64
+.debug_frame    0x00000000       0x50
  *(.debug_frame)
- .debug_frame   0x00000000       0x64 main.o
+ .debug_frame   0x00000000       0x50 main.o
 
-.debug_str      0x00000000      0x375
+.debug_str      0x00000000      0x35b
  *(.debug_str)
  .debug_str     0x00000000      0x208 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_str     0x00000208      0x16d main.o
-                                0x1a1 (size before relaxing)
+ .debug_str     0x00000208      0x153 main.o
+                                0x187 (size before relaxing)
 
-.debug_loc      0x00000000       0x78
+.debug_loc      0x00000000       0x56
  *(.debug_loc)
- .debug_loc     0x00000000       0x78 main.o
+ .debug_loc     0x00000000       0x56 main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -458,11 +434,11 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x20
+.debug_ranges   0x00000000       0x18
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x20 main.o
+ .debug_ranges  0x00000000       0x18 main.o
 
 .debug_macro
  *(.debug_macro)
-OUTPUT(Interrupt_test.elf elf32-avr)
+OUTPUT(Timer_test.elf elf32-avr)
 LOAD linker stubs
