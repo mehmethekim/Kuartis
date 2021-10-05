@@ -11,7 +11,7 @@ main.d main.o: .././main.c \
  c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\xmega.h \
  c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
- .././PortDefinitions.h .././LED.h \
+ .././PortDefinitions.h .././Functions.h \
  c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h
@@ -42,7 +42,7 @@ c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\loc
 
 .././PortDefinitions.h:
 
-.././LED.h:
+.././Functions.h:
 
 c:\users\mehme\desktop\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h:
 

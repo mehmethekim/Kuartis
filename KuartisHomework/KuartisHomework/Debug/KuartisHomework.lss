@@ -3,68 +3,72 @@ KuartisHomework.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00803c00  00803c00  00000112  2**0
+  0 .data         00000000  00803c00  00803c00  00000304  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000be  00000000  00000000  00000054  2**1
+  1 .text         00000290  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000112  2**0
+  2 .bss          00000003  00803c00  00803c00  00000304  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000304  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000144  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000334  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000028  00000000  00000000  00000180  2**0
+  5 .debug_aranges 00000048  00000000  00000000  00000370  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000024ce  00000000  00000000  000001a8  2**0
+  6 .debug_info   00002784  00000000  00000000  000003b8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00002181  00000000  00000000  00002676  2**0
+  7 .debug_abbrev 000021f6  00000000  00000000  00002b3c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000295  00000000  00000000  000047f7  2**0
+  8 .debug_line   000004df  00000000  00000000  00004d32  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000034  00000000  00000000  00004a8c  2**2
+  9 .debug_frame  00000080  00000000  00000000  00005214  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000010fa  00000000  00000000  00004ac0  2**0
+ 10 .debug_str    000011f7  00000000  00000000  00005294  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000018  00000000  00000000  00005bba  2**0
+ 11 .debug_loc    0000002f  00000000  00000000  0000648b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000038  00000000  00000000  000064ba  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
 
 00000000 <__vectors>:
    0:	0c 94 48 00 	jmp	0x90	; 0x90 <__ctors_end>
-   4:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-   8:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-   c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  10:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  14:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  18:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  1c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  20:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  24:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  28:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  2c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  30:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  34:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  38:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  3c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  40:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  44:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  48:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  4c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  50:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  54:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  58:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  5c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  60:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  64:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  68:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  6c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  70:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  74:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  78:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  7c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  80:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  84:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  88:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
-  8c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+   4:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+   8:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+   c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  10:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  14:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  18:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  1c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  20:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  24:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  28:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  2c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  30:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  34:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  38:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  3c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  40:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  44:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  48:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  4c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  50:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  54:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  58:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  5c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  60:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  64:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  68:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  6c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  70:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  74:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  78:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  7c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  80:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  84:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  88:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  8c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
 
 00000090 <__ctors_end>:
   90:	11 24       	eor	r1, r1
@@ -73,41 +77,320 @@ Disassembly of section .text:
   96:	cd bf       	out	0x3d, r28	; 61
   98:	df e3       	ldi	r29, 0x3F	; 63
   9a:	de bf       	out	0x3e, r29	; 62
-  9c:	02 d0       	rcall	.+4      	; 0xa2 <main>
-  9e:	0d c0       	rjmp	.+26     	; 0xba <_exit>
 
-000000a0 <__bad_interrupt>:
-  a0:	af cf       	rjmp	.-162    	; 0x0 <__vectors>
+0000009c <__do_clear_bss>:
+  9c:	2c e3       	ldi	r18, 0x3C	; 60
+  9e:	a0 e0       	ldi	r26, 0x00	; 0
+  a0:	bc e3       	ldi	r27, 0x3C	; 60
+  a2:	01 c0       	rjmp	.+2      	; 0xa6 <.do_clear_bss_start>
 
-000000a2 <main>:
-#include <util/delay.h>
+000000a4 <.do_clear_bss_loop>:
+  a4:	1d 92       	st	X+, r1
 
+000000a6 <.do_clear_bss_start>:
+  a6:	a3 30       	cpi	r26, 0x03	; 3
+  a8:	b2 07       	cpc	r27, r18
+  aa:	e1 f7       	brne	.-8      	; 0xa4 <.do_clear_bss_loop>
+  ac:	ec d0       	rcall	.+472    	; 0x286 <main>
+  ae:	ee c0       	rjmp	.+476    	; 0x28c <_exit>
+
+000000b0 <__bad_interrupt>:
+  b0:	a7 cf       	rjmp	.-178    	; 0x0 <__vectors>
+
+000000b2 <Initialize>:
+/************************************************************************/
+/* This function reads the Infrared input from the controller and changes the
+state of the INPUT_STATE                                                                    */
+/************************************************************************/
+//Early Read function for debug purposes
+void IR_Read_Debug(){
+  b2:	e0 e0       	ldi	r30, 0x00	; 0
+  b4:	f4 e0       	ldi	r31, 0x04	; 4
+  b6:	87 e2       	ldi	r24, 0x27	; 39
+  b8:	80 83       	st	Z, r24
+  ba:	8f ef       	ldi	r24, 0xFF	; 255
+  bc:	84 83       	std	Z+4, r24	; 0x04
+  be:	e0 e6       	ldi	r30, 0x60	; 96
+  c0:	f4 e0       	ldi	r31, 0x04	; 4
+  c2:	84 e7       	ldi	r24, 0x74	; 116
+  c4:	80 83       	st	Z, r24
+  c6:	14 82       	std	Z+4, r1	; 0x04
+  c8:	10 92 02 3c 	sts	0x3C02, r1	; 0x803c02 <State>
+  cc:	10 92 00 3c 	sts	0x3C00, r1	; 0x803c00 <__DATA_REGION_ORIGIN__>
+  d0:	08 95       	ret
+
+000000d2 <setState>:
+  d2:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
+  d6:	82 30       	cpi	r24, 0x02	; 2
+  d8:	01 f1       	breq	.+64     	; 0x11a <__EEPROM_REGION_LENGTH__+0x1a>
+  da:	28 f4       	brcc	.+10     	; 0xe6 <setState+0x14>
+  dc:	88 23       	and	r24, r24
+  de:	41 f0       	breq	.+16     	; 0xf0 <setState+0x1e>
+  e0:	81 30       	cpi	r24, 0x01	; 1
+  e2:	61 f0       	breq	.+24     	; 0xfc <setState+0x2a>
+  e4:	45 c0       	rjmp	.+138    	; 0x170 <__EEPROM_REGION_LENGTH__+0x70>
+  e6:	83 30       	cpi	r24, 0x03	; 3
+  e8:	39 f1       	breq	.+78     	; 0x138 <__EEPROM_REGION_LENGTH__+0x38>
+  ea:	84 30       	cpi	r24, 0x04	; 4
+  ec:	a1 f1       	breq	.+104    	; 0x156 <__EEPROM_REGION_LENGTH__+0x56>
+  ee:	40 c0       	rjmp	.+128    	; 0x170 <__EEPROM_REGION_LENGTH__+0x70>
+  f0:	8f ef       	ldi	r24, 0xFF	; 255
+  f2:	80 93 04 04 	sts	0x0404, r24	; 0x800404 <__RODATA_PM_OFFSET__+0x7fc404>
+  f6:	10 92 64 04 	sts	0x0464, r1	; 0x800464 <__RODATA_PM_OFFSET__+0x7fc464>
+  fa:	08 95       	ret
+  fc:	e0 e0       	ldi	r30, 0x00	; 0
+  fe:	f4 e0       	ldi	r31, 0x04	; 4
+ 100:	8f ef       	ldi	r24, 0xFF	; 255
+ 102:	84 83       	std	Z+4, r24	; 0x04
+ 104:	84 81       	ldd	r24, Z+4	; 0x04
+ 106:	8e 7f       	andi	r24, 0xFE	; 254
+ 108:	84 83       	std	Z+4, r24	; 0x04
+ 10a:	e0 e6       	ldi	r30, 0x60	; 96
+ 10c:	f4 e0       	ldi	r31, 0x04	; 4
+ 10e:	84 81       	ldd	r24, Z+4	; 0x04
+ 110:	84 83       	std	Z+4, r24	; 0x04
+ 112:	84 81       	ldd	r24, Z+4	; 0x04
+ 114:	80 64       	ori	r24, 0x40	; 64
+ 116:	84 83       	std	Z+4, r24	; 0x04
+ 118:	08 95       	ret
+ 11a:	e0 e0       	ldi	r30, 0x00	; 0
+ 11c:	f4 e0       	ldi	r31, 0x04	; 4
+ 11e:	8f ef       	ldi	r24, 0xFF	; 255
+ 120:	84 83       	std	Z+4, r24	; 0x04
+ 122:	84 81       	ldd	r24, Z+4	; 0x04
+ 124:	8a 7f       	andi	r24, 0xFA	; 250
+ 126:	84 83       	std	Z+4, r24	; 0x04
+ 128:	e0 e6       	ldi	r30, 0x60	; 96
+ 12a:	f4 e0       	ldi	r31, 0x04	; 4
+ 12c:	84 81       	ldd	r24, Z+4	; 0x04
+ 12e:	84 83       	std	Z+4, r24	; 0x04
+ 130:	84 81       	ldd	r24, Z+4	; 0x04
+ 132:	80 62       	ori	r24, 0x20	; 32
+ 134:	84 83       	std	Z+4, r24	; 0x04
+ 136:	08 95       	ret
+ 138:	e0 e0       	ldi	r30, 0x00	; 0
+ 13a:	f4 e0       	ldi	r31, 0x04	; 4
+ 13c:	8f ef       	ldi	r24, 0xFF	; 255
+ 13e:	84 83       	std	Z+4, r24	; 0x04
+ 140:	84 81       	ldd	r24, Z+4	; 0x04
+ 142:	88 7f       	andi	r24, 0xF8	; 248
+ 144:	84 83       	std	Z+4, r24	; 0x04
+ 146:	e0 e6       	ldi	r30, 0x60	; 96
+ 148:	f4 e0       	ldi	r31, 0x04	; 4
+ 14a:	84 81       	ldd	r24, Z+4	; 0x04
+ 14c:	84 83       	std	Z+4, r24	; 0x04
+ 14e:	84 81       	ldd	r24, Z+4	; 0x04
+ 150:	80 61       	ori	r24, 0x10	; 16
+ 152:	84 83       	std	Z+4, r24	; 0x04
+ 154:	08 95       	ret
+ 156:	e0 e0       	ldi	r30, 0x00	; 0
+ 158:	f4 e0       	ldi	r31, 0x04	; 4
+ 15a:	8f ef       	ldi	r24, 0xFF	; 255
+ 15c:	84 83       	std	Z+4, r24	; 0x04
+ 15e:	84 81       	ldd	r24, Z+4	; 0x04
+ 160:	88 7d       	andi	r24, 0xD8	; 216
+ 162:	84 83       	std	Z+4, r24	; 0x04
+ 164:	e0 e6       	ldi	r30, 0x60	; 96
+ 166:	f4 e0       	ldi	r31, 0x04	; 4
+ 168:	84 81       	ldd	r24, Z+4	; 0x04
+ 16a:	84 60       	ori	r24, 0x04	; 4
+ 16c:	84 83       	std	Z+4, r24	; 0x04
+ 16e:	08 95       	ret
+ 170:	81 e0       	ldi	r24, 0x01	; 1
+ 172:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 176:	08 95       	ret
+
+00000178 <WriteInput>:
+ 178:	80 91 01 3c 	lds	r24, 0x3C01	; 0x803c01 <InputState>
+ 17c:	82 30       	cpi	r24, 0x02	; 2
+ 17e:	a1 f0       	breq	.+40     	; 0x1a8 <WriteInput+0x30>
+ 180:	18 f4       	brcc	.+6      	; 0x188 <WriteInput+0x10>
+ 182:	88 23       	and	r24, r24
+ 184:	31 f0       	breq	.+12     	; 0x192 <WriteInput+0x1a>
+ 186:	08 95       	ret
+ 188:	84 30       	cpi	r24, 0x04	; 4
+ 18a:	11 f1       	breq	.+68     	; 0x1d0 <WriteInput+0x58>
+ 18c:	86 30       	cpi	r24, 0x06	; 6
+ 18e:	a1 f1       	breq	.+104    	; 0x1f8 <WriteInput+0x80>
+ 190:	08 95       	ret
+ 192:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
+ 196:	81 11       	cpse	r24, r1
+ 198:	04 c0       	rjmp	.+8      	; 0x1a2 <WriteInput+0x2a>
+ 19a:	81 e0       	ldi	r24, 0x01	; 1
+ 19c:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 1a0:	08 95       	ret
+ 1a2:	10 92 02 3c 	sts	0x3C02, r1	; 0x803c02 <State>
+ 1a6:	08 95       	ret
+ 1a8:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
+ 1ac:	81 30       	cpi	r24, 0x01	; 1
+ 1ae:	21 f4       	brne	.+8      	; 0x1b8 <WriteInput+0x40>
+ 1b0:	82 e0       	ldi	r24, 0x02	; 2
+ 1b2:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 1b6:	08 95       	ret
+ 1b8:	82 30       	cpi	r24, 0x02	; 2
+ 1ba:	21 f4       	brne	.+8      	; 0x1c4 <WriteInput+0x4c>
+ 1bc:	83 e0       	ldi	r24, 0x03	; 3
+ 1be:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 1c2:	08 95       	ret
+ 1c4:	83 30       	cpi	r24, 0x03	; 3
+ 1c6:	11 f5       	brne	.+68     	; 0x20c <WriteInput+0x94>
+ 1c8:	84 e0       	ldi	r24, 0x04	; 4
+ 1ca:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 1ce:	08 95       	ret
+ 1d0:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
+ 1d4:	84 30       	cpi	r24, 0x04	; 4
+ 1d6:	21 f4       	brne	.+8      	; 0x1e0 <WriteInput+0x68>
+ 1d8:	83 e0       	ldi	r24, 0x03	; 3
+ 1da:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 1de:	08 95       	ret
+ 1e0:	83 30       	cpi	r24, 0x03	; 3
+ 1e2:	21 f4       	brne	.+8      	; 0x1ec <WriteInput+0x74>
+ 1e4:	82 e0       	ldi	r24, 0x02	; 2
+ 1e6:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 1ea:	08 95       	ret
+ 1ec:	82 30       	cpi	r24, 0x02	; 2
+ 1ee:	71 f4       	brne	.+28     	; 0x20c <WriteInput+0x94>
+ 1f0:	81 e0       	ldi	r24, 0x01	; 1
+ 1f2:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
+ 1f6:	08 95       	ret
+ 1f8:	80 91 00 3c 	lds	r24, 0x3C00	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 1fc:	81 11       	cpse	r24, r1
+ 1fe:	04 c0       	rjmp	.+8      	; 0x208 <WriteInput+0x90>
+ 200:	81 e0       	ldi	r24, 0x01	; 1
+ 202:	80 93 00 3c 	sts	0x3C00, r24	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 206:	08 95       	ret
+ 208:	10 92 00 3c 	sts	0x3C00, r1	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 20c:	08 95       	ret
+
+0000020e <Test_One>:
+}
+
+void Test_One(){
+ 20e:	cf 93       	push	r28
+ 210:	df 93       	push	r29
+	
+	//Press power button
+	InputState.currentState = POWER;
+ 212:	10 92 01 3c 	sts	0x3C01, r1	; 0x803c01 <InputState>
+	WriteInput();
+ 216:	b0 df       	rcall	.-160    	; 0x178 <WriteInput>
+	setState(); // 1
+ 218:	5c df       	rcall	.-328    	; 0xd2 <setState>
+	
+	//Press + button
+	InputState.currentState = INCREMENT;
+ 21a:	d2 e0       	ldi	r29, 0x02	; 2
+ 21c:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+	WriteInput();
+ 220:	ab df       	rcall	.-170    	; 0x178 <WriteInput>
+	setState(); // 2
+ 222:	57 df       	rcall	.-338    	; 0xd2 <setState>
+	
+	//Press + button
+	InputState.currentState = INCREMENT;
+ 224:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+	WriteInput();
+ 228:	a7 df       	rcall	.-178    	; 0x178 <WriteInput>
+	setState(); // 3
+ 22a:	53 df       	rcall	.-346    	; 0xd2 <setState>
+	
+	//Press - button
+	InputState.currentState = DECREMENT;
+ 22c:	c4 e0       	ldi	r28, 0x04	; 4
+ 22e:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+	WriteInput();
+ 232:	a2 df       	rcall	.-188    	; 0x178 <WriteInput>
+	setState(); //2
+ 234:	4e df       	rcall	.-356    	; 0xd2 <setState>
+	
+	//Press Light Button
+	InputState.currentState = LIGHT;
+ 236:	86 e0       	ldi	r24, 0x06	; 6
+ 238:	80 93 01 3c 	sts	0x3C01, r24	; 0x803c01 <InputState>
+	WriteInput();
+ 23c:	9d df       	rcall	.-198    	; 0x178 <WriteInput>
+	setState();
+ 23e:	49 df       	rcall	.-366    	; 0xd2 <setState>
+	
+	//Press + button
+	InputState.currentState = INCREMENT;
+ 240:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+	WriteInput();
+ 244:	99 df       	rcall	.-206    	; 0x178 <WriteInput>
+	setState(); //3
+ 246:	45 df       	rcall	.-374    	; 0xd2 <setState>
+	
+	//Press + button
+	InputState.currentState = INCREMENT;
+ 248:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+	WriteInput();
+ 24c:	95 df       	rcall	.-214    	; 0x178 <WriteInput>
+	setState(); //4
+ 24e:	41 df       	rcall	.-382    	; 0xd2 <setState>
+	
+	//Press + button
+	InputState.currentState = INCREMENT;
+ 250:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+	WriteInput();
+ 254:	91 df       	rcall	.-222    	; 0x178 <WriteInput>
+	setState(); //4
+ 256:	3d df       	rcall	.-390    	; 0xd2 <setState>
+	
+	//Press - button
+	InputState.currentState = DECREMENT;
+ 258:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+	WriteInput();
+ 25c:	8d df       	rcall	.-230    	; 0x178 <WriteInput>
+	setState(); //3
+ 25e:	39 df       	rcall	.-398    	; 0xd2 <setState>
+	//Press - button
+	InputState.currentState = DECREMENT;
+ 260:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+	WriteInput();
+ 264:	89 df       	rcall	.-238    	; 0x178 <WriteInput>
+	setState(); //2
+ 266:	35 df       	rcall	.-406    	; 0xd2 <setState>
+	//Press - button
+	InputState.currentState = DECREMENT;
+ 268:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+	WriteInput();
+ 26c:	85 df       	rcall	.-246    	; 0x178 <WriteInput>
+	setState(); //1
+ 26e:	31 df       	rcall	.-414    	; 0xd2 <setState>
+	
+	//Press - button
+	InputState.currentState = DECREMENT;
+ 270:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+	WriteInput();
+ 274:	81 df       	rcall	.-254    	; 0x178 <WriteInput>
+	setState(); //1
+ 276:	2d df       	rcall	.-422    	; 0xd2 <setState>
+	
+	//Press power button
+	InputState.currentState = POWER;
+ 278:	10 92 01 3c 	sts	0x3C01, r1	; 0x803c01 <InputState>
+	WriteInput();
+ 27c:	7d df       	rcall	.-262    	; 0x178 <WriteInput>
+	setState(); // OFF	
+ 27e:	29 df       	rcall	.-430    	; 0xd2 <setState>
+ 280:	df 91       	pop	r29
+ 282:	cf 91       	pop	r28
+ 284:	08 95       	ret
+
+00000286 <main>:
+
+//Global Variables
+int state = 0;
 int main(void)
 {
-	// LED TEST RUN
-	PORTA.DIR = (1<<LED_1) | (1<<LED_2) | (1<<LED_3) | (1<<LED_4) ;
-  a2:	e0 e0       	ldi	r30, 0x00	; 0
-  a4:	f4 e0       	ldi	r31, 0x04	; 4
-  a6:	87 e2       	ldi	r24, 0x27	; 39
-  a8:	80 83       	st	Z, r24
-	PORTA.OUT = 0b11111111;
-  aa:	8f ef       	ldi	r24, 0xFF	; 255
-  ac:	84 83       	std	Z+4, r24	; 0x04
-	PORTA.OUT = 0b11011000; // Set all register to 1. 
-  ae:	88 ed       	ldi	r24, 0xD8	; 216
-  b0:	84 83       	std	Z+4, r24	; 0x04
-	
-	
-	//PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_2) & ~(1<<LED_3) & ~(1<<LED_4); // light all  -> 0b11011000
-	//PORTA.OUT |= (1<<LED_1)  | (1<<LED_3); // close 1 and 3 0b00000001 OR 0b00000010 0b00000011
-	PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_3);  // light all  1 3 -> 0b11111011 AND 0b11011111->0b11011011    
-  b2:	84 81       	ldd	r24, Z+4	; 0x04
-  b4:	8c 7f       	andi	r24, 0xFC	; 252
-  b6:	84 83       	std	Z+4, r24	; 0x04
-  b8:	ff cf       	rjmp	.-2      	; 0xb8 <main+0x16>
+	Initialize();
+ 286:	15 df       	rcall	.-470    	; 0xb2 <Initialize>
+	Test_One();
+ 288:	c2 df       	rcall	.-124    	; 0x20e <Test_One>
+ 28a:	ff cf       	rjmp	.-2      	; 0x28a <main+0x4>
 
-000000ba <_exit>:
-  ba:	f8 94       	cli
+0000028c <_exit>:
+ 28c:	f8 94       	cli
 
-000000bc <__stop_program>:
-  bc:	ff cf       	rjmp	.-2      	; 0xbc <__stop_program>
+0000028e <__stop_program>:
+ 28e:	ff cf       	rjmp	.-2      	; 0x28e <__stop_program>
