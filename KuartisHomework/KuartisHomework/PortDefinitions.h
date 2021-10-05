@@ -1,0 +1,23 @@
+//Motor Relay PORT Definitions
+#define MOTOR_RELAY_1 PORTD_PIN6CTRL
+#define MOTOR_RELAY_2 PORTD_PIN5CTRL
+#define MOTOR_RELAY_3 PORTD_PIN4CTRL
+#define MOTOR_RELAY_4 PORTD_PIN2CTRL
+
+//LED PORT Definitions
+
+#define LED_1 PORTA_PIN0CTRL
+#define LED_2 PORTA_PIN2CTRL
+#define LED_3 PORTA_PIN1CTRL
+#define LED_4 PORTA_PIN5CTRL
+
+// IR Codes
+
+#define IR_POWER 129UL
+#define IR_PLUS	 133UL
+#define IR_MINUS 138UL
+#define IR_LIGHT 153UL
+
+
+
+
