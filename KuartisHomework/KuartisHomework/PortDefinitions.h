@@ -1,16 +1,16 @@
 //Motor Relay PORT Definitions
-#define MOTOR_RELAY_DDRX 
-#define MOTOR_RELAY_1 PORTD_PIN6CTRL
-#define MOTOR_RELAY_2 PORTD_PIN5CTRL
-#define MOTOR_RELAY_3 PORTD_PIN4CTRL
-#define MOTOR_RELAY_4 PORTD_PIN2CTRL
+
+#define MOTOR_RELAY_1 6 //PORTD6
+#define MOTOR_RELAY_2 5 //PORTD5
+#define MOTOR_RELAY_3 4 //PORTD4
+#define MOTOR_RELAY_4 2 //PORTD2
 
 //LED PORT Definitions
 
-#define LED_1 0 //PORTA_PIN0CTRL
-#define LED_2 2//PORTA_PIN2CTRL
-#define LED_3 1//PORTA_PIN1CTRL
-#define LED_4 5//PORTA_PIN5CTRL
+#define LED_1 0 //PORTA0
+#define LED_2 2 //PORTA2
+#define LED_3 1 //PORTA1
+#define LED_4 5 //PORTA5
 
 // IR Codes
 
