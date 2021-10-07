@@ -4,6 +4,8 @@ c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/
                               C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o (exit)
 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_clear_bss.o)
                               main.o (__do_clear_bss)
+C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+                              main.o (ccp_write_io)
 
 Allocating common symbols
 Common symbol       size              file
@@ -21,9 +23,29 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
+ .text.RTC_init
+                0x00000000       0x5e main.o
+ .text.enableIR_ISR
+                0x00000000        0xc main.o
+ .text.setState
+                0x00000000       0xa6 main.o
+ .text.WriteInput
+                0x00000000       0x96 main.o
+ .text.Test_One
+                0x00000000      0x138 main.o
  .bss.debug_flag
                 0x00000000        0x2 main.o
  .bss.state     0x00000000        0x2 main.o
+ .bss.command_register
+                0x00000000        0x4 main.o
+ .bss.total_tick_counter
+                0x00000000        0x2 main.o
+ .bss.tick_counter
+                0x00000000        0x2 main.o
+ .bss.command_counter_flag
+                0x00000000        0x2 main.o
+ .bss.start_counter
+                0x00000000        0x2 main.o
  .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
@@ -56,6 +78,16 @@ Discarded input sections
                 0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_clear_bss.o)
  .text.libgcc.fixed
                 0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_clear_bss.o)
+ .text          0x00000000        0x0 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+ .data          0x00000000        0x0 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+ .bss           0x00000000        0x0 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+ .text.avr-libc
+                0x00000000        0xc C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+ .debug_line    0x00000000       0x6a C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+ .debug_info    0x00000000       0xad C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+ .debug_abbrev  0x00000000       0x14 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
+ .debug_aranges
+                0x00000000       0x20 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls\libatmega808.a(ccp_write.o)
 
 Memory Configuration
 
@@ -185,7 +217,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x5f4
+.text           0x00000000      0x24c
  *(.vectors)
  .vectors       0x00000000       0x90 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
                 0x00000000                __vector_default
@@ -252,7 +284,6 @@ END GROUP
                 0x000000b0                __bad_interrupt
                 0x000000b0                __vector_31
                 0x000000b0                __vector_35
-                0x000000b0                __vector_3
                 0x000000b0                __vector_23
                 0x000000b0                __vector_30
                 0x000000b0                __vector_25
@@ -265,6 +296,7 @@ END GROUP
                 0x000000b0                __vector_5
                 0x000000b0                __vector_33
                 0x000000b0                __vector_4
+                0x000000b0                __vector_9
                 0x000000b0                __vector_2
                 0x000000b0                __vector_21
                 0x000000b0                __vector_15
@@ -279,38 +311,26 @@ END GROUP
                 0x000000b2                . = ALIGN (0x2)
  *(.text.*)
  .text.Initialize
-                0x000000b2       0x60 main.o
+                0x000000b2       0x76 main.o
                 0x000000b2                Initialize
  .text.disableIR_ISR
-                0x00000112        0xa main.o
-                0x00000112                disableIR_ISR
- .text.enableIR_ISR
-                0x0000011c        0xc main.o
-                0x0000011c                enableIR_ISR
- .text.setState
-                0x00000128       0xa6 main.o
-                0x00000128                setState
- .text.WriteInput
-                0x000001ce       0x96 main.o
-                0x000001ce                WriteInput
- .text.IR_Read  0x00000264       0xfa main.o
-                0x00000264                IR_Read
- .text.Test_One
-                0x0000035e      0x150 main.o
-                0x0000035e                Test_One
- .text.main     0x000004ae       0x10 main.o
-                0x000004ae                main
+                0x00000128        0xa main.o
+                0x00000128                disableIR_ISR
+ .text.IR_Read  0x00000132       0x16 main.o
+                0x00000132                IR_Read
+ .text.main     0x00000148       0x22 main.o
+                0x00000148                main
  .text.__vector_6
-                0x000004be       0x48 main.o
-                0x000004be                __vector_6
- .text.__vector_9
-                0x00000506       0xea main.o
-                0x00000506                __vector_9
-                0x000005f0                . = ALIGN (0x2)
+                0x0000016a       0x48 main.o
+                0x0000016a                __vector_6
+ .text.__vector_3
+                0x000001b2       0x96 main.o
+                0x000001b2                __vector_3
+                0x00000248                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000005f0        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
-                0x000005f0                _exit
-                0x000005f0                exit
+ .fini9         0x00000248        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
+                0x00000248                _exit
+                0x00000248                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -329,16 +349,16 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000005f0        0x4 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
+ .fini0         0x00000248        0x4 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
  *(.fini0)
-                0x000005f4                _etext = .
+                0x0000024c                _etext = .
 
 .rodata
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.r*)
 
-.data           0x00803c00        0x0 load address 0x000005f4
+.data           0x00803c00        0x0 load address 0x0000024c
                 [!provide]                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -347,46 +367,31 @@ END GROUP
                 0x00803c00                _edata = .
                 [!provide]                PROVIDE (__data_end, .)
 
-.bss            0x00803c00       0x17
+.bss            0x00803c00        0xb
                 0x00803c00                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.command_register
-                0x00803c00        0x4 main.o
-                0x00803c00                command_register
- .bss.total_tick_counter
-                0x00803c04        0x2 main.o
-                0x00803c04                total_tick_counter
- .bss.tick_counter
-                0x00803c06        0x2 main.o
-                0x00803c06                tick_counter
- .bss.command_counter_flag
-                0x00803c08        0x2 main.o
-                0x00803c08                command_counter_flag
  .bss.idle_flag
-                0x00803c0a        0x2 main.o
-                0x00803c0a                idle_flag
- .bss.start_counter
-                0x00803c0c        0x2 main.o
-                0x00803c0c                start_counter
- .bss.counter   0x00803c0e        0x4 main.o
-                0x00803c0e                counter
+                0x00803c00        0x2 main.o
+                0x00803c00                idle_flag
+ .bss.counter   0x00803c02        0x4 main.o
+                0x00803c02                counter
  *(COMMON)
- COMMON         0x00803c12        0x5 main.o
-                0x00803c12                LightState
-                0x00803c13                InputState
-                0x00803c14                RepeatState
-                0x00803c15                State
-                0x00803c16                NECState
-                0x00803c17                PROVIDE (__bss_end, .)
-                0x000005f4                __data_load_start = LOADADDR (.data)
-                0x000005f4                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00803c06        0x5 main.o
+                0x00803c06                LightState
+                0x00803c07                InputState
+                0x00803c08                RepeatState
+                0x00803c09                State
+                0x00803c0a                NECState
+                0x00803c0b                PROVIDE (__bss_end, .)
+                0x0000024c                __data_load_start = LOADADDR (.data)
+                0x0000024c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00803c17        0x0
+.noinit         0x00803c0b        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00803c17                _end = .
+                0x00803c0b                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -451,42 +456,42 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x68
+.debug_aranges  0x00000000       0x70
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x68 main.o
+                0x00000000       0x70 main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3317
+.debug_info     0x00000000     0x30e2
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x229c C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_info    0x0000229c     0x107b main.o
+ .debug_info    0x0000229c      0xe46 main.o
 
-.debug_abbrev   0x00000000     0x22f4
+.debug_abbrev   0x00000000     0x2333
  *(.debug_abbrev)
  .debug_abbrev  0x00000000     0x20c2 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_abbrev  0x000020c2      0x232 main.o
+ .debug_abbrev  0x000020c2      0x271 main.o
 
-.debug_line     0x00000000      0x73f
+.debug_line     0x00000000      0x7c4
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x172 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_line    0x00000172      0x5cd main.o
+ .debug_line    0x00000172      0x652 main.o
 
-.debug_frame    0x00000000      0x150
+.debug_frame    0x00000000      0x144
  *(.debug_frame)
- .debug_frame   0x00000000      0x150 main.o
+ .debug_frame   0x00000000      0x144 main.o
 
-.debug_str      0x00000000     0x1617
+.debug_str      0x00000000     0x167d
  *(.debug_str)
  .debug_str     0x00000000      0xecd C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_str     0x00000ecd      0x74a main.o
-                                0x7d0 (size before relaxing)
+ .debug_str     0x00000ecd      0x7b0 main.o
+                                0x859 (size before relaxing)
 
-.debug_loc      0x00000000      0x525
+.debug_loc      0x00000000      0x513
  *(.debug_loc)
- .debug_loc     0x00000000      0x525 main.o
+ .debug_loc     0x00000000      0x513 main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -506,9 +511,9 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x58
+.debug_ranges   0x00000000       0x60
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x58 main.o
+ .debug_ranges  0x00000000       0x60 main.o
 
 .debug_macro
  *(.debug_macro)

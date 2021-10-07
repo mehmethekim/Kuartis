@@ -1,3 +1,6 @@
+#ifndef F_CPU
+#define F_CPU 20000000UL // 20MHz Clock
+#endif
 //Motor Relay PORT Definitions
 
 #define MOTOR_RELAY_1 6 //PORTD6
@@ -49,3 +52,9 @@
 
 //Timer interrupt enable CMP0
 #define CMP_0 4
+
+
+#define TIM0_PRESCALER  1024
+#define TIM0_MS         1
+#define TIM0_MS_FACTOR  ( (F_CPU) / (TIM0_PRESCALER) )
+#define TIM0_COMP_VAL   19534//(TIM0_MS * TIM0_MS_FACTOR)

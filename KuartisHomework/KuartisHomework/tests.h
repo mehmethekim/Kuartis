@@ -8,27 +8,27 @@ void Test_One(){
 	InputState.currentState = POWER;
 	WriteInput();
 	setState(); // 1
-	_delay_ms(1000);
+	_delay_ms(10);
 	//Press + button
 	InputState.currentState = INCREMENT;
 	WriteInput();
 	setState(); // 2
-	_delay_ms(1000);
+	_delay_ms(10);
 	//Press + button
 	InputState.currentState = INCREMENT;
 	WriteInput();
 	setState(); // 3
-	_delay_ms(200);
+	_delay_ms(10);
 	//Press - button
 	InputState.currentState = DECREMENT;
 	WriteInput();
 	setState(); //2
-	_delay_ms(200);
+	_delay_ms(1);
 	//Press Light Button
 	InputState.currentState = LIGHT;
 	WriteInput();
 	setState();
-	_delay_ms(200);
+	_delay_ms(1000);
 	//Press + button
 	InputState.currentState = INCREMENT;
 	WriteInput();

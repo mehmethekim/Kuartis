@@ -13,7 +13,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #ifndef F_CPU
-#define F_CPU 2000000UL // 2MHz Clock
+#define F_CPU 20000000UL // 20MHz Clock
 #endif
 
 
@@ -31,6 +31,12 @@ int volatile state = 0;
 int volatile debug_flag = 0;
 int main(void)
 {
+	CCP = 0xD8;
+	CLKCTRL.MCLKLOCK =0x00;
+	CCP = 0xD8;
+    CLKCTRL.MCLKCTRLB = 0;
+	CCP = 0xD8;
+	CLKCTRL.MCLKLOCK =0x01;
 	/*
 	CCP = 0xD8;
 	CLKCTRL.MCLKLOCK =0x00;
@@ -44,7 +50,8 @@ int main(void)
 	PORTD.DIR = (1<<LED_ON_OFF);
 	PORTD.OUT = 0x00; // Close All LEDs
 	Initialize();
-	Test_One();
+	
+	//Test_One();
 	
     while (1) 
     {
@@ -58,35 +65,61 @@ int main(void)
 /************************************************************************/
 
 ISR(PORTA_PORT_vect){
+	
 	IR_Read();
-	disableIR_ISR(); //  disable interrupt 
+	disableIR_ISR();
+	 //  disable interrupt 
 }
-ISR(TCA0_CMP0_vect){
-	//counter++;
+ISR(RTC_CNT_vect){
+	 RTC.INTFLAGS = RTC_OVF_bm;
+	if(idle_flag == 1){
+		counter++;
+		if(counter >= 4){
+			counter = 0;
+		}
+	}
+	else{
+		counter = 0;
+	}
+	
+}
+
 /*
-	if(counter==1000){
-		idle_flag=1;
-	}*/
+ISR(TCA0_OVF_vect){
+	
+
+	TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm;
 	//IDLE to START case
 	if(idle_flag==1){
 		
-		if((PORTA.IN & (1<<IR_INPUT)) == 0 ){
+		
+		counter++;
+		if(counter>=20000){
+			counter=0;
+		}
+		
+		
+		if((PORTA.IN & (1<<IR_INPUT)) == 0){
 			counter++;
-			if(counter==8500){
+			if(counter>=8){
 				NECState.currentState = START;
 				idle_flag=0;
+				TCA0.SINGLE.INTCTRL &= ~TCA_SINGLE_OVF_bm;
 				IR_Read();
+				counter = 0;
 			}
 		}
 		else{
-			start_counter = 0;//if signal is less than 9ms, reset counter and flag;
-			idle_flag=0;
+			//start_counter = 0;//if signal is less than 9ms, reset counter and flag;
+			//idle_flag=0;
 		}
+		
 	}
 	//AFTER START
 	if(NECState.currentState == COMMAND){
 		
 		if(command_counter_flag==1){
+			IR_Read();
 			tick_counter++;
 			total_tick_counter++;
 			if(total_tick_counter>= 54000 ){
@@ -97,8 +130,8 @@ ISR(TCA0_CMP0_vect){
 		}
 		
 	}
-	
-	
-}
+	//TCA0.SINGLE.CNT = 0;
 
+}
+	*/
 

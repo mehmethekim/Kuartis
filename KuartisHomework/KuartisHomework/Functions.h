@@ -1,4 +1,6 @@
 #include <avr/interrupt.h>
+#include <avr/cpufunc.h>
+#define RTC_EXAMPLE_PERIOD            (511)
 //Functions
 /************************************************************************/
 /* Initializes LEDs and MOTOR ports. Sets the initial state to START State                                                                     */
@@ -96,15 +98,66 @@ INPUT_STATE_INFO InputState;
 STATE_INFO State;
 LIGHT_STATE_INFO LightState;
 REPEAT_STATE_INFO RepeatState;
-int32_t counter = 0;
+int32_t volatile counter = 0;
 int start_counter=0;
 volatile int16_t idle_flag = 0;
 volatile int16_t command_counter_flag=0;
 volatile int16_t tick_counter = 0;
 volatile int16_t total_tick_counter = 0;
 volatile int32_t command_register = 0x0000;
+void RTC_init(void)
+{
+	uint8_t temp;
+	
+	/* Initialize 32.768kHz Oscillator: */
+	/* Disable oscillator: */
+	temp = CLKCTRL.XOSC32KCTRLA;
+	temp &= ~CLKCTRL_ENABLE_bm;
+	/* Writing to protected register */
+	ccp_write_io((void*)&CLKCTRL.XOSC32KCTRLA, temp);
+	
+	while(CLKCTRL.MCLKSTATUS & CLKCTRL_XOSC32KS_bm)
+	{
+		; /* Wait until XOSC32KS becomes 0 */
+	}
+	
+	/* SEL = 0 (Use External Crystal): */
+	temp = CLKCTRL.XOSC32KCTRLA;
+	temp &= ~CLKCTRL_SEL_bm;
+	/* Writing to protected register */
+	ccp_write_io((void*)&CLKCTRL.XOSC32KCTRLA, temp);
+	
+	/* Enable oscillator: */
+	temp = CLKCTRL.XOSC32KCTRLA;
+	temp |= CLKCTRL_ENABLE_bm;
+	/* Writing to protected register */
+	ccp_write_io((void*)&CLKCTRL.XOSC32KCTRLA, temp);
+	
+	/* Initialize RTC: */
+	while (RTC.STATUS > 0)
+	{
+		; /* Wait for all register to be synchronized */
+	}
+
+	/* Set period */
+	RTC.PER = RTC_EXAMPLE_PERIOD;
+
+	/* 32.768kHz External Crystal Oscillator (XOSC32K) */
+	RTC.CLKSEL = RTC_CLKSEL_TOSC32K_gc;
+
+	/* Run in debug: enabled */
+	RTC.DBGCTRL |= RTC_DBGRUN_bm;
+	
+	RTC.CTRLA = RTC_PRESCALER_DIV32_gc  /* 32 */
+	| RTC_RTCEN_bm            /* Enable: enabled */
+	| RTC_RUNSTDBY_bm;        /* Run In Standby: enabled */
+	
+	/* Enable Overflow Interrupt */
+	RTC.INTCTRL |= RTC_OVF_bm;
+}
 void Initialize(){
 	//Initialize LEDs
+	sei();
 	PORTA.DIR = (1<<LED_1) | (1<<LED_2) | (1<<LED_3) | (1<<LED_4) ;
 	PORTA.OUT = 0xFF; // Close All LEDs
 	
@@ -122,23 +175,33 @@ void Initialize(){
 	SREG |= (1<<GLOBAL_INT_ENABLE); //Enable Interrupts
 	
 	
+	 
+	 /* Enable Global Interrupts */
+	 sei();
 	
 	//Initial state
 	State.currentState = OFF;
 	LightState.currentState = OFF;
 	NECState.currentState = IDLE;
+	//RTC initialize
 	
-	//Timer initialize
-	 
 	
-	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
-	TCA0.SINGLE.CMP0 = 0x14;// 20 tick count for 1us count @20Mhz;
+	RTC.CLKSEL = RTC_CLKSEL_INT32K_gc;//32.768 kHz RTC
+	while (RTC.STATUS > 0); 
+	RTC.PER = 32768; 
+	RTC.INTCTRL |= RTC_OVF_bm; 
+	RTC.CTRLA = RTC_PRESCALER_DIV1_gc|RTC_RTCEN_bm | RTC_RUNSTDBY_bm;   
+	//OVF set 1
 	
-	TCA0.SINGLE.INTCTRL = (1<<CMP_0);
+	RTC.CMP = 0x8000;
+	
+	
+
+	
 }
 
 /************************************************************************/
-/* This function disables interupt for IR receiver                                                                     */
+/* This function disables interrupt for IR receiver                                                                     */
 /************************************************************************/
 void disableIR_ISR(){
 	PORTA.PIN3CTRL &= 0b00000000;
@@ -252,22 +315,11 @@ void IR_Read(){
 	//If the signal is HIGH for 9ms, this means we are in START.
 	switch(NECState.currentState){
 		case(IDLE):
-		idle_flag=1;
-		/*
-		if(start_counter==8500){
-				start_counter = 0; //reset counter
-				idle_flag=0;
-				NECState.currentState = START;
-			
-		}
-		*/
+			idle_flag=1;
+		
 			break;
 		case(START):
-			idle_flag =0;
-			
-			//4.5ms HIGH
-			enableIR_ISR();
-			NECState.currentState = COMMAND;
+		
 			break;
 			/*
 		case(ADDRESS):
@@ -279,18 +331,7 @@ void IR_Read(){
 			*/
 			
 		case(COMMAND):
-			command_counter_flag = 1;
-			if(tick_counter>=1000 && tick_counter<=1200){
-				//add 0 to the register
-				command_register = command_register<<1;
-				tick_counter = 0;
-			}
-			else if(tick_counter>=2200 && tick_counter<= 2300){
-				//add 1 to the register
-				command_register = command_register<<1;
-				command_register|= 0x0001;
-				tick_counter = 0;
-			}
+			
 			break;
 		
 		case(END):
