@@ -1,6 +1,5 @@
 #include <avr/interrupt.h>
-#include <avr/cpufunc.h>
-#define RTC_EXAMPLE_PERIOD            (511)
+#define RTC_TICK 122
 //Functions
 /************************************************************************/
 /* Initializes LEDs and MOTOR ports. Sets the initial state to START State                                                                     */
@@ -105,56 +104,8 @@ volatile int16_t command_counter_flag=0;
 volatile int16_t tick_counter = 0;
 volatile int16_t total_tick_counter = 0;
 volatile int32_t command_register = 0x0000;
-void RTC_init(void)
-{
-	uint8_t temp;
-	
-	/* Initialize 32.768kHz Oscillator: */
-	/* Disable oscillator: */
-	temp = CLKCTRL.XOSC32KCTRLA;
-	temp &= ~CLKCTRL_ENABLE_bm;
-	/* Writing to protected register */
-	ccp_write_io((void*)&CLKCTRL.XOSC32KCTRLA, temp);
-	
-	while(CLKCTRL.MCLKSTATUS & CLKCTRL_XOSC32KS_bm)
-	{
-		; /* Wait until XOSC32KS becomes 0 */
-	}
-	
-	/* SEL = 0 (Use External Crystal): */
-	temp = CLKCTRL.XOSC32KCTRLA;
-	temp &= ~CLKCTRL_SEL_bm;
-	/* Writing to protected register */
-	ccp_write_io((void*)&CLKCTRL.XOSC32KCTRLA, temp);
-	
-	/* Enable oscillator: */
-	temp = CLKCTRL.XOSC32KCTRLA;
-	temp |= CLKCTRL_ENABLE_bm;
-	/* Writing to protected register */
-	ccp_write_io((void*)&CLKCTRL.XOSC32KCTRLA, temp);
-	
-	/* Initialize RTC: */
-	while (RTC.STATUS > 0)
-	{
-		; /* Wait for all register to be synchronized */
-	}
-
-	/* Set period */
-	RTC.PER = RTC_EXAMPLE_PERIOD;
-
-	/* 32.768kHz External Crystal Oscillator (XOSC32K) */
-	RTC.CLKSEL = RTC_CLKSEL_TOSC32K_gc;
-
-	/* Run in debug: enabled */
-	RTC.DBGCTRL |= RTC_DBGRUN_bm;
-	
-	RTC.CTRLA = RTC_PRESCALER_DIV32_gc  /* 32 */
-	| RTC_RTCEN_bm            /* Enable: enabled */
-	| RTC_RUNSTDBY_bm;        /* Run In Standby: enabled */
-	
-	/* Enable Overflow Interrupt */
-	RTC.INTCTRL |= RTC_OVF_bm;
-}
+volatile int32_t bit_counter = 0;
+volatile int16_t i;
 void Initialize(){
 	//Initialize LEDs
 	sei();
@@ -188,12 +139,12 @@ void Initialize(){
 	
 	RTC.CLKSEL = RTC_CLKSEL_INT32K_gc;//32.768 kHz RTC
 	while (RTC.STATUS > 0); 
-	RTC.PER = 32768; 
+	RTC.PER = 4;  // 122 us per tick
 	RTC.INTCTRL |= RTC_OVF_bm; 
 	RTC.CTRLA = RTC_PRESCALER_DIV1_gc|RTC_RTCEN_bm | RTC_RUNSTDBY_bm;   
 	//OVF set 1
 	
-	RTC.CMP = 0x8000;
+	
 	
 	
 
@@ -211,6 +162,17 @@ void disableIR_ISR(){
 /************************************************************************/
 void enableIR_ISR(){
 	PORTA.PIN3CTRL |= 0b00000011;
+	RTC.CNT = 0;//reset counter
+}
+void disableRTC(){
+	RTC.CNT = 0;//reset counter
+	RTC.INTCTRL &= ~RTC_OVF_bm;
+	tick_counter = 0;
+}
+void enableRTC(){
+	RTC.INTCTRL |= RTC_OVF_bm;
+	
+	 
 }
 void setState(){
 	
@@ -314,13 +276,20 @@ state of the INPUT_STATE                                                        
 void IR_Read(){
 	//If the signal is HIGH for 9ms, this means we are in START.
 	switch(NECState.currentState){
+		
+		/*
 		case(IDLE):
 			idle_flag=1;
-		
-			break;
+			cli();
+			RTC.CNT = 0;
+			sei();
+			break;*/
+			/*
 		case(START):
-		
+			enableIR_ISR();
+			NECState.currentState = COMMAND;
 			break;
+			*/
 			/*
 		case(ADDRESS):
 			
@@ -331,11 +300,103 @@ void IR_Read(){
 			*/
 			
 		case(COMMAND):
+		/*
+		for(k = 0; k < 32; k++){
+			SET_TIMER1(0);
+			count = 0;
+			while(!input(IR_Sensor) && (count < 650))
+				count = GET_TIMER1();
+			if((count > 649) || (count < 500))
+				return 0;
+			count = 0;
+			SET_TIMER1(0);
+			while((input(IR_Sensor)) && (count < 1800))
+			count = GET_TIMER1();
+			if( (count > 1799) || (count < 400))
+			return 0;
+			if( count > 1000)                                 // If space width > 1ms
+			bit_set(code, (31 - k));                        // Write 1 to bit (31 - k)
+			else                                              // If space width < 1ms
+			bit_clear(code, (31 - k));                      // Write 0 to bit (31 - k)
+		}
+		*/
+			idle_flag=1;
+			cli();
+			RTC.CNT = 0;
+			sei();
+			//start timer
 			
+			disableIR_ISR();
+			while(((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 9000){
+				
+			}
+			cli();
+			RTC.CNT = 0;
+			sei();
+			counter = 0;
+			while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 4500){
+				
+			}
+			counter = 0;
+			cli();
+			RTC.CNT = 0;
+			sei();
+			counter = 0;
+			idle_flag=0;
+			command_counter_flag=1;
+			for(i=0;i<32;i++){
+				tick_counter=0;
+				while(((PORTA.IN & (1<<IR_INPUT)) == 0)&&tick_counter*RTC_TICK<=650){
+					//loop until next space
+				}
+				
+				tick_counter=0;
+				disableRTC();//reset timer
+				enableRTC();
+				while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&&tick_counter*RTC_TICK<=1800){
+					//loop until next pulse
+				}
+				
+				if( tick_counter*RTC_TICK> 1000)   {                            
+					command_register = command_register<<1;   
+					command_register |= 0x01;
+					tick_counter=tick_counter;
+				    }                
+				else    {                                         
+					command_register = command_register<<1;
+					tick_counter=tick_counter;
+				}
+				
+				cli();
+				RTC.CNT = 0;
+				sei();
+				
+			}
+			/*
+			if(tick_counter*RTC_TICK >= 1000 && tick_counter*RTC_TICK <= 1300){
+				//clear timer
+				disableRTC();
+				command_register = command_register<<1;//0 added
+				enableRTC();bit_counter++;
+			}
+			else if (tick_counter*RTC_TICK >= 2000 && tick_counter*RTC_TICK <= 2400){
+				disableRTC();
+				command_register = command_register<<1;
+				command_register |= 0x01;//0 added
+				enableRTC();bit_counter++;
+			}
+			enableIR_ISR();
+			
+			if(bit_counter==32){
+				bit_counter=0;
+				NECState.currentState=END;
+			}
+			*/
+			command_register = command_register<<1;
 			break;
 		
 		case(END):
-		
+			counter=0;
 			break;
 		case(REPEAT):
 			

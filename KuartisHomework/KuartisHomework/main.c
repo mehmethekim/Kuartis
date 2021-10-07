@@ -50,7 +50,7 @@ int main(void)
 	PORTD.DIR = (1<<LED_ON_OFF);
 	PORTD.OUT = 0x00; // Close All LEDs
 	Initialize();
-	
+	CPUINT.LVL1VEC = RTC_CNT_vect_num;
 	//Test_One();
 	
     while (1) 
@@ -65,22 +65,35 @@ int main(void)
 /************************************************************************/
 
 ISR(PORTA_PORT_vect){
-	
+	NECState.currentState = COMMAND;
 	IR_Read();
-	disableIR_ISR();
+	
 	 //  disable interrupt 
 }
 ISR(RTC_CNT_vect){
 	 RTC.INTFLAGS = RTC_OVF_bm;
+	 
 	if(idle_flag == 1){
 		counter++;
-		if(counter >= 4){
-			counter = 0;
+		/*
+		if((PORTA.IN & (1<<IR_INPUT)) == 0){
+			
+			if(counter*RTC_TICK >= 9500){//aproxx 9ms worth of tick
+				counter = 0;
+				disableIR_ISR();
+				//disable RTC 
+				disableRTC();
+				NECState.currentState = START;
+				IR_Read();
+					
+			}*/
 		}
-	}
-	else{
-		counter = 0;
-	}
+	if(command_counter_flag==1){
+			
+				tick_counter++;
+				total_tick_counter++;
+			
+		}
 	
 }
 
