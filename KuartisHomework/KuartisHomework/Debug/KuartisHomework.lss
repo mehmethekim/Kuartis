@@ -3,31 +3,31 @@ KuartisHomework.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00803c00  00803c00  00000304  2**0
+  0 .data         00000000  00803c00  00803c00  00000668  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000290  00000000  00000000  00000074  2**1
+  1 .text         000005f4  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000003  00803c00  00803c00  00000304  2**0
+  2 .bss          00000017  00803c00  00803c00  00000668  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000304  2**0
+  3 .comment      00000030  00000000  00000000  00000668  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000334  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000698  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000048  00000000  00000000  00000370  2**0
+  5 .debug_aranges 00000068  00000000  00000000  000006d4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00002784  00000000  00000000  000003b8  2**0
+  6 .debug_info   00003317  00000000  00000000  0000073c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000021f6  00000000  00000000  00002b3c  2**0
+  7 .debug_abbrev 000022f4  00000000  00000000  00003a53  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000004df  00000000  00000000  00004d32  2**0
+  8 .debug_line   0000073f  00000000  00000000  00005d47  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000080  00000000  00000000  00005214  2**2
+  9 .debug_frame  00000150  00000000  00000000  00006488  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000011f7  00000000  00000000  00005294  2**0
+ 10 .debug_str    00001617  00000000  00000000  000065d8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000002f  00000000  00000000  0000648b  2**0
+ 11 .debug_loc    00000525  00000000  00000000  00007bef  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000038  00000000  00000000  000064ba  2**0
+ 12 .debug_ranges 00000058  00000000  00000000  00008114  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -39,10 +39,10 @@ Disassembly of section .text:
    c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
   10:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
   14:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
-  18:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  18:	0c 94 5f 02 	jmp	0x4be	; 0x4be <__vector_6>
   1c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
   20:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
-  24:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
+  24:	0c 94 83 02 	jmp	0x506	; 0x506 <__vector_9>
   28:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
   2c:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
   30:	0c 94 58 00 	jmp	0xb0	; 0xb0 <__bad_interrupt>
@@ -88,309 +88,896 @@ Disassembly of section .text:
   a4:	1d 92       	st	X+, r1
 
 000000a6 <.do_clear_bss_start>:
-  a6:	a3 30       	cpi	r26, 0x03	; 3
+  a6:	a7 31       	cpi	r26, 0x17	; 23
   a8:	b2 07       	cpc	r27, r18
   aa:	e1 f7       	brne	.-8      	; 0xa4 <.do_clear_bss_loop>
-  ac:	ec d0       	rcall	.+472    	; 0x286 <main>
-  ae:	ee c0       	rjmp	.+476    	; 0x28c <_exit>
+  ac:	00 d2       	rcall	.+1024   	; 0x4ae <main>
+  ae:	a0 c2       	rjmp	.+1344   	; 0x5f0 <_exit>
 
 000000b0 <__bad_interrupt>:
   b0:	a7 cf       	rjmp	.-178    	; 0x0 <__vectors>
 
 000000b2 <Initialize>:
-/************************************************************************/
-/* This function reads the Infrared input from the controller and changes the
-state of the INPUT_STATE                                                                    */
-/************************************************************************/
-//Early Read function for debug purposes
-void IR_Read_Debug(){
+volatile int16_t tick_counter = 0;
+volatile int16_t total_tick_counter = 0;
+volatile int32_t command_register = 0x0000;
+void Initialize(){
+	//Initialize LEDs
+	PORTA.DIR = (1<<LED_1) | (1<<LED_2) | (1<<LED_3) | (1<<LED_4) ;
   b2:	e0 e0       	ldi	r30, 0x00	; 0
   b4:	f4 e0       	ldi	r31, 0x04	; 4
   b6:	87 e2       	ldi	r24, 0x27	; 39
   b8:	80 83       	st	Z, r24
+	PORTA.OUT = 0xFF; // Close All LEDs
   ba:	8f ef       	ldi	r24, 0xFF	; 255
   bc:	84 83       	std	Z+4, r24	; 0x04
-  be:	e0 e6       	ldi	r30, 0x60	; 96
-  c0:	f4 e0       	ldi	r31, 0x04	; 4
+	
+	//Initialize Motors
+	
+	PORTD.DIR = (1<<MOTOR_RELAY_1) | (1<<MOTOR_RELAY_2)  |(1<<MOTOR_RELAY_3) |(1<<MOTOR_RELAY_4);
+  be:	a0 e6       	ldi	r26, 0x60	; 96
+  c0:	b4 e0       	ldi	r27, 0x04	; 4
   c2:	84 e7       	ldi	r24, 0x74	; 116
-  c4:	80 83       	st	Z, r24
-  c6:	14 82       	std	Z+4, r1	; 0x04
-  c8:	10 92 02 3c 	sts	0x3C02, r1	; 0x803c02 <State>
-  cc:	10 92 00 3c 	sts	0x3C00, r1	; 0x803c00 <__DATA_REGION_ORIGIN__>
-  d0:	08 95       	ret
-
-000000d2 <setState>:
-  d2:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
-  d6:	82 30       	cpi	r24, 0x02	; 2
-  d8:	01 f1       	breq	.+64     	; 0x11a <__EEPROM_REGION_LENGTH__+0x1a>
-  da:	28 f4       	brcc	.+10     	; 0xe6 <setState+0x14>
-  dc:	88 23       	and	r24, r24
-  de:	41 f0       	breq	.+16     	; 0xf0 <setState+0x1e>
-  e0:	81 30       	cpi	r24, 0x01	; 1
-  e2:	61 f0       	breq	.+24     	; 0xfc <setState+0x2a>
-  e4:	45 c0       	rjmp	.+138    	; 0x170 <__EEPROM_REGION_LENGTH__+0x70>
-  e6:	83 30       	cpi	r24, 0x03	; 3
-  e8:	39 f1       	breq	.+78     	; 0x138 <__EEPROM_REGION_LENGTH__+0x38>
-  ea:	84 30       	cpi	r24, 0x04	; 4
-  ec:	a1 f1       	breq	.+104    	; 0x156 <__EEPROM_REGION_LENGTH__+0x56>
-  ee:	40 c0       	rjmp	.+128    	; 0x170 <__EEPROM_REGION_LENGTH__+0x70>
-  f0:	8f ef       	ldi	r24, 0xFF	; 255
-  f2:	80 93 04 04 	sts	0x0404, r24	; 0x800404 <__RODATA_PM_OFFSET__+0x7fc404>
-  f6:	10 92 64 04 	sts	0x0464, r1	; 0x800464 <__RODATA_PM_OFFSET__+0x7fc464>
-  fa:	08 95       	ret
+  c4:	8c 93       	st	X, r24
+	PORTD.OUT = 0x00; //Close all motors
+  c6:	14 96       	adiw	r26, 0x04	; 4
+  c8:	1c 92       	st	X, r1
+  ca:	14 97       	sbiw	r26, 0x04	; 4
+	//Initialize Buzzer
+	PORTD.DIR |= (1<<BUZZER);
+  cc:	8c 91       	ld	r24, X
+  ce:	80 68       	ori	r24, 0x80	; 128
+  d0:	8c 93       	st	X, r24
+	PORTD.OUT &= ~(1<<BUZZER);
+  d2:	14 96       	adiw	r26, 0x04	; 4
+  d4:	8c 91       	ld	r24, X
+  d6:	14 97       	sbiw	r26, 0x04	; 4
+  d8:	8f 77       	andi	r24, 0x7F	; 127
+  da:	14 96       	adiw	r26, 0x04	; 4
+  dc:	8c 93       	st	X, r24
+	//Initialize IR Receiver
+	PORTA.DIR &= ~(1<<IR_INPUT);
+  de:	80 81       	ld	r24, Z
+  e0:	87 7f       	andi	r24, 0xF7	; 247
+  e2:	80 83       	st	Z, r24
+	
+	PORTA.PIN3CTRL |= 0b00000011; //SET ISC to 0x3 to have falling edge trigger. ISC is last 3 bits. Set to 011.
+  e4:	83 89       	ldd	r24, Z+19	; 0x13
+  e6:	83 60       	ori	r24, 0x03	; 3
+  e8:	83 8b       	std	Z+19, r24	; 0x13
+	SREG |= (1<<GLOBAL_INT_ENABLE); //Enable Interrupts
+  ea:	8f b7       	in	r24, 0x3f	; 63
+  ec:	80 68       	ori	r24, 0x80	; 128
+  ee:	8f bf       	out	0x3f, r24	; 63
+	
+	
+	
+	//Initial state
+	State.currentState = OFF;
+  f0:	10 92 15 3c 	sts	0x3C15, r1	; 0x803c15 <State>
+	LightState.currentState = OFF;
+  f4:	10 92 12 3c 	sts	0x3C12, r1	; 0x803c12 <LightState>
+	NECState.currentState = IDLE;
+  f8:	10 92 16 3c 	sts	0x3C16, r1	; 0x803c16 <NECState>
+	
+	//Timer initialize
+	 
+	
+	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
   fc:	e0 e0       	ldi	r30, 0x00	; 0
-  fe:	f4 e0       	ldi	r31, 0x04	; 4
- 100:	8f ef       	ldi	r24, 0xFF	; 255
- 102:	84 83       	std	Z+4, r24	; 0x04
- 104:	84 81       	ldd	r24, Z+4	; 0x04
- 106:	8e 7f       	andi	r24, 0xFE	; 254
- 108:	84 83       	std	Z+4, r24	; 0x04
- 10a:	e0 e6       	ldi	r30, 0x60	; 96
- 10c:	f4 e0       	ldi	r31, 0x04	; 4
- 10e:	84 81       	ldd	r24, Z+4	; 0x04
- 110:	84 83       	std	Z+4, r24	; 0x04
- 112:	84 81       	ldd	r24, Z+4	; 0x04
- 114:	80 64       	ori	r24, 0x40	; 64
- 116:	84 83       	std	Z+4, r24	; 0x04
- 118:	08 95       	ret
- 11a:	e0 e0       	ldi	r30, 0x00	; 0
- 11c:	f4 e0       	ldi	r31, 0x04	; 4
- 11e:	8f ef       	ldi	r24, 0xFF	; 255
- 120:	84 83       	std	Z+4, r24	; 0x04
- 122:	84 81       	ldd	r24, Z+4	; 0x04
- 124:	8a 7f       	andi	r24, 0xFA	; 250
- 126:	84 83       	std	Z+4, r24	; 0x04
- 128:	e0 e6       	ldi	r30, 0x60	; 96
- 12a:	f4 e0       	ldi	r31, 0x04	; 4
- 12c:	84 81       	ldd	r24, Z+4	; 0x04
- 12e:	84 83       	std	Z+4, r24	; 0x04
- 130:	84 81       	ldd	r24, Z+4	; 0x04
- 132:	80 62       	ori	r24, 0x20	; 32
- 134:	84 83       	std	Z+4, r24	; 0x04
- 136:	08 95       	ret
- 138:	e0 e0       	ldi	r30, 0x00	; 0
- 13a:	f4 e0       	ldi	r31, 0x04	; 4
- 13c:	8f ef       	ldi	r24, 0xFF	; 255
- 13e:	84 83       	std	Z+4, r24	; 0x04
- 140:	84 81       	ldd	r24, Z+4	; 0x04
- 142:	88 7f       	andi	r24, 0xF8	; 248
- 144:	84 83       	std	Z+4, r24	; 0x04
- 146:	e0 e6       	ldi	r30, 0x60	; 96
- 148:	f4 e0       	ldi	r31, 0x04	; 4
- 14a:	84 81       	ldd	r24, Z+4	; 0x04
- 14c:	84 83       	std	Z+4, r24	; 0x04
- 14e:	84 81       	ldd	r24, Z+4	; 0x04
- 150:	80 61       	ori	r24, 0x10	; 16
- 152:	84 83       	std	Z+4, r24	; 0x04
- 154:	08 95       	ret
- 156:	e0 e0       	ldi	r30, 0x00	; 0
- 158:	f4 e0       	ldi	r31, 0x04	; 4
- 15a:	8f ef       	ldi	r24, 0xFF	; 255
- 15c:	84 83       	std	Z+4, r24	; 0x04
- 15e:	84 81       	ldd	r24, Z+4	; 0x04
- 160:	88 7d       	andi	r24, 0xD8	; 216
- 162:	84 83       	std	Z+4, r24	; 0x04
- 164:	e0 e6       	ldi	r30, 0x60	; 96
- 166:	f4 e0       	ldi	r31, 0x04	; 4
- 168:	84 81       	ldd	r24, Z+4	; 0x04
- 16a:	84 60       	ori	r24, 0x04	; 4
- 16c:	84 83       	std	Z+4, r24	; 0x04
- 16e:	08 95       	ret
- 170:	81 e0       	ldi	r24, 0x01	; 1
- 172:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 176:	08 95       	ret
+  fe:	fa e0       	ldi	r31, 0x0A	; 10
+ 100:	81 e0       	ldi	r24, 0x01	; 1
+ 102:	80 83       	st	Z, r24
+	TCA0.SINGLE.CMP0 = 0x14;// 20 tick count for 1us count @20Mhz;
+ 104:	84 e1       	ldi	r24, 0x14	; 20
+ 106:	90 e0       	ldi	r25, 0x00	; 0
+ 108:	80 a7       	std	Z+40, r24	; 0x28
+ 10a:	91 a7       	std	Z+41, r25	; 0x29
+	
+	TCA0.SINGLE.INTCTRL = (1<<CMP_0);
+ 10c:	80 e1       	ldi	r24, 0x10	; 16
+ 10e:	82 87       	std	Z+10, r24	; 0x0a
+ 110:	08 95       	ret
 
-00000178 <WriteInput>:
- 178:	80 91 01 3c 	lds	r24, 0x3C01	; 0x803c01 <InputState>
- 17c:	82 30       	cpi	r24, 0x02	; 2
- 17e:	a1 f0       	breq	.+40     	; 0x1a8 <WriteInput+0x30>
- 180:	18 f4       	brcc	.+6      	; 0x188 <WriteInput+0x10>
- 182:	88 23       	and	r24, r24
- 184:	31 f0       	breq	.+12     	; 0x192 <WriteInput+0x1a>
- 186:	08 95       	ret
- 188:	84 30       	cpi	r24, 0x04	; 4
- 18a:	11 f1       	breq	.+68     	; 0x1d0 <WriteInput+0x58>
- 18c:	86 30       	cpi	r24, 0x06	; 6
- 18e:	a1 f1       	breq	.+104    	; 0x1f8 <WriteInput+0x80>
- 190:	08 95       	ret
- 192:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
- 196:	81 11       	cpse	r24, r1
- 198:	04 c0       	rjmp	.+8      	; 0x1a2 <WriteInput+0x2a>
- 19a:	81 e0       	ldi	r24, 0x01	; 1
- 19c:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 1a0:	08 95       	ret
- 1a2:	10 92 02 3c 	sts	0x3C02, r1	; 0x803c02 <State>
- 1a6:	08 95       	ret
- 1a8:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
- 1ac:	81 30       	cpi	r24, 0x01	; 1
- 1ae:	21 f4       	brne	.+8      	; 0x1b8 <WriteInput+0x40>
- 1b0:	82 e0       	ldi	r24, 0x02	; 2
- 1b2:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 1b6:	08 95       	ret
- 1b8:	82 30       	cpi	r24, 0x02	; 2
- 1ba:	21 f4       	brne	.+8      	; 0x1c4 <WriteInput+0x4c>
- 1bc:	83 e0       	ldi	r24, 0x03	; 3
- 1be:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 1c2:	08 95       	ret
- 1c4:	83 30       	cpi	r24, 0x03	; 3
- 1c6:	11 f5       	brne	.+68     	; 0x20c <WriteInput+0x94>
- 1c8:	84 e0       	ldi	r24, 0x04	; 4
- 1ca:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 1ce:	08 95       	ret
- 1d0:	80 91 02 3c 	lds	r24, 0x3C02	; 0x803c02 <State>
- 1d4:	84 30       	cpi	r24, 0x04	; 4
- 1d6:	21 f4       	brne	.+8      	; 0x1e0 <WriteInput+0x68>
- 1d8:	83 e0       	ldi	r24, 0x03	; 3
- 1da:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 1de:	08 95       	ret
- 1e0:	83 30       	cpi	r24, 0x03	; 3
- 1e2:	21 f4       	brne	.+8      	; 0x1ec <WriteInput+0x74>
- 1e4:	82 e0       	ldi	r24, 0x02	; 2
- 1e6:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 1ea:	08 95       	ret
- 1ec:	82 30       	cpi	r24, 0x02	; 2
- 1ee:	71 f4       	brne	.+28     	; 0x20c <WriteInput+0x94>
- 1f0:	81 e0       	ldi	r24, 0x01	; 1
- 1f2:	80 93 02 3c 	sts	0x3C02, r24	; 0x803c02 <State>
- 1f6:	08 95       	ret
- 1f8:	80 91 00 3c 	lds	r24, 0x3C00	; 0x803c00 <__DATA_REGION_ORIGIN__>
- 1fc:	81 11       	cpse	r24, r1
- 1fe:	04 c0       	rjmp	.+8      	; 0x208 <WriteInput+0x90>
- 200:	81 e0       	ldi	r24, 0x01	; 1
- 202:	80 93 00 3c 	sts	0x3C00, r24	; 0x803c00 <__DATA_REGION_ORIGIN__>
- 206:	08 95       	ret
- 208:	10 92 00 3c 	sts	0x3C00, r1	; 0x803c00 <__DATA_REGION_ORIGIN__>
- 20c:	08 95       	ret
+00000112 <disableIR_ISR>:
 
-0000020e <Test_One>:
+/************************************************************************/
+/* This function disables interupt for IR receiver                                                                     */
+/************************************************************************/
+void disableIR_ISR(){
+	PORTA.PIN3CTRL &= 0b00000000;
+ 112:	e0 e0       	ldi	r30, 0x00	; 0
+ 114:	f4 e0       	ldi	r31, 0x04	; 4
+ 116:	83 89       	ldd	r24, Z+19	; 0x13
+ 118:	13 8a       	std	Z+19, r1	; 0x13
+ 11a:	08 95       	ret
+
+0000011c <enableIR_ISR>:
 }
+/************************************************************************/
+/* This function enables interrupt for IR Receiver                                                                     */
+/************************************************************************/
+void enableIR_ISR(){
+	PORTA.PIN3CTRL |= 0b00000011;
+ 11c:	e0 e0       	ldi	r30, 0x00	; 0
+ 11e:	f4 e0       	ldi	r31, 0x04	; 4
+ 120:	83 89       	ldd	r24, Z+19	; 0x13
+ 122:	83 60       	ori	r24, 0x03	; 3
+ 124:	83 8b       	std	Z+19, r24	; 0x13
+ 126:	08 95       	ret
 
+00000128 <setState>:
+}
+void setState(){
+	
+	switch(State.currentState){
+ 128:	80 91 15 3c 	lds	r24, 0x3C15	; 0x803c15 <State>
+ 12c:	82 30       	cpi	r24, 0x02	; 2
+ 12e:	01 f1       	breq	.+64     	; 0x170 <setState+0x48>
+ 130:	28 f4       	brcc	.+10     	; 0x13c <setState+0x14>
+ 132:	88 23       	and	r24, r24
+ 134:	41 f0       	breq	.+16     	; 0x146 <setState+0x1e>
+ 136:	81 30       	cpi	r24, 0x01	; 1
+ 138:	61 f0       	breq	.+24     	; 0x152 <setState+0x2a>
+ 13a:	45 c0       	rjmp	.+138    	; 0x1c6 <setState+0x9e>
+ 13c:	83 30       	cpi	r24, 0x03	; 3
+ 13e:	39 f1       	breq	.+78     	; 0x18e <setState+0x66>
+ 140:	84 30       	cpi	r24, 0x04	; 4
+ 142:	a1 f1       	breq	.+104    	; 0x1ac <setState+0x84>
+ 144:	40 c0       	rjmp	.+128    	; 0x1c6 <setState+0x9e>
+		case(OFF):
+			PORTA.OUT = 0xFF; // All LEDs OFF
+ 146:	8f ef       	ldi	r24, 0xFF	; 255
+ 148:	80 93 04 04 	sts	0x0404, r24	; 0x800404 <__RODATA_PM_OFFSET__+0x7fc404>
+			PORTD.OUT = 0x00; // All MOTORs OFF
+ 14c:	10 92 64 04 	sts	0x0464, r1	; 0x800464 <__RODATA_PM_OFFSET__+0x7fc464>
+			break;
+ 150:	08 95       	ret
+		case(ONE):
+			//Only LED_1 is on.
+			PORTA.OUT = 0xFF;
+ 152:	e0 e0       	ldi	r30, 0x00	; 0
+ 154:	f4 e0       	ldi	r31, 0x04	; 4
+ 156:	8f ef       	ldi	r24, 0xFF	; 255
+ 158:	84 83       	std	Z+4, r24	; 0x04
+			PORTA.OUT &= ~(1<<LED_1);
+ 15a:	84 81       	ldd	r24, Z+4	; 0x04
+ 15c:	8e 7f       	andi	r24, 0xFE	; 254
+ 15e:	84 83       	std	Z+4, r24	; 0x04
+			
+			PORTD.OUT &= ~(0<<MOTOR_RELAY_2);//CLOSE MOTOR_2
+ 160:	e0 e6       	ldi	r30, 0x60	; 96
+ 162:	f4 e0       	ldi	r31, 0x04	; 4
+ 164:	84 81       	ldd	r24, Z+4	; 0x04
+ 166:	84 83       	std	Z+4, r24	; 0x04
+			PORTD.OUT |= (1<<MOTOR_RELAY_1);//OPEN MOTOR_1
+ 168:	84 81       	ldd	r24, Z+4	; 0x04
+ 16a:	80 64       	ori	r24, 0x40	; 64
+ 16c:	84 83       	std	Z+4, r24	; 0x04
+			break;
+ 16e:	08 95       	ret
+		case(TWO):
+			//LEDs 1-2 are on.
+			PORTA.OUT = 0xFF;
+ 170:	e0 e0       	ldi	r30, 0x00	; 0
+ 172:	f4 e0       	ldi	r31, 0x04	; 4
+ 174:	8f ef       	ldi	r24, 0xFF	; 255
+ 176:	84 83       	std	Z+4, r24	; 0x04
+			PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_2);
+ 178:	84 81       	ldd	r24, Z+4	; 0x04
+ 17a:	8a 7f       	andi	r24, 0xFA	; 250
+ 17c:	84 83       	std	Z+4, r24	; 0x04
+			
+			PORTD.OUT &= ~(0<<MOTOR_RELAY_3);//CLOSE MOTOR_3
+ 17e:	e0 e6       	ldi	r30, 0x60	; 96
+ 180:	f4 e0       	ldi	r31, 0x04	; 4
+ 182:	84 81       	ldd	r24, Z+4	; 0x04
+ 184:	84 83       	std	Z+4, r24	; 0x04
+			PORTD.OUT |= (1<<MOTOR_RELAY_2);//OPEN MOTOR_2
+ 186:	84 81       	ldd	r24, Z+4	; 0x04
+ 188:	80 62       	ori	r24, 0x20	; 32
+ 18a:	84 83       	std	Z+4, r24	; 0x04
+			
+			break;
+ 18c:	08 95       	ret
+		case(THREE):
+			//LEDs 1-2-3 are on.
+			PORTA.OUT = 0xFF;
+ 18e:	e0 e0       	ldi	r30, 0x00	; 0
+ 190:	f4 e0       	ldi	r31, 0x04	; 4
+ 192:	8f ef       	ldi	r24, 0xFF	; 255
+ 194:	84 83       	std	Z+4, r24	; 0x04
+			PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_2) & ~(1<<LED_3);
+ 196:	84 81       	ldd	r24, Z+4	; 0x04
+ 198:	88 7f       	andi	r24, 0xF8	; 248
+ 19a:	84 83       	std	Z+4, r24	; 0x04
+			
+			PORTD.OUT &= ~(0<<MOTOR_RELAY_4);//CLOSE MOTOR_4
+ 19c:	e0 e6       	ldi	r30, 0x60	; 96
+ 19e:	f4 e0       	ldi	r31, 0x04	; 4
+ 1a0:	84 81       	ldd	r24, Z+4	; 0x04
+ 1a2:	84 83       	std	Z+4, r24	; 0x04
+			PORTD.OUT |= (1<<MOTOR_RELAY_3);//OPEN MOTOR_3
+ 1a4:	84 81       	ldd	r24, Z+4	; 0x04
+ 1a6:	80 61       	ori	r24, 0x10	; 16
+ 1a8:	84 83       	std	Z+4, r24	; 0x04
+			//
+			break;
+ 1aa:	08 95       	ret
+		case(BOOST):
+			//LEDs 1-2-3-4 are on. After 15 min, go to state THREE.
+			PORTA.OUT = 0xFF;
+ 1ac:	e0 e0       	ldi	r30, 0x00	; 0
+ 1ae:	f4 e0       	ldi	r31, 0x04	; 4
+ 1b0:	8f ef       	ldi	r24, 0xFF	; 255
+ 1b2:	84 83       	std	Z+4, r24	; 0x04
+			PORTA.OUT &= ~(1<<LED_1) & ~ (1<<LED_2) & ~ (1<<LED_3) & ~(1<<LED_4);
+ 1b4:	84 81       	ldd	r24, Z+4	; 0x04
+ 1b6:	88 7d       	andi	r24, 0xD8	; 216
+ 1b8:	84 83       	std	Z+4, r24	; 0x04
+			
+			PORTD.OUT |= (1<<MOTOR_RELAY_4);//OPEN MOTOR_4
+ 1ba:	e0 e6       	ldi	r30, 0x60	; 96
+ 1bc:	f4 e0       	ldi	r31, 0x04	; 4
+ 1be:	84 81       	ldd	r24, Z+4	; 0x04
+ 1c0:	84 60       	ori	r24, 0x04	; 4
+ 1c2:	84 83       	std	Z+4, r24	; 0x04
+			break;
+ 1c4:	08 95       	ret
+		default:
+			State.currentState = ONE; // In case of errors or out of state machine, go to state one.
+ 1c6:	81 e0       	ldi	r24, 0x01	; 1
+ 1c8:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 1cc:	08 95       	ret
+
+000001ce <WriteInput>:
+/************************************************************************/
+/* This function changes the State of the system according to the input from the controller                                                                     */
+/************************************************************************/
+void WriteInput(){
+	
+	switch(InputState.currentState){
+ 1ce:	80 91 13 3c 	lds	r24, 0x3C13	; 0x803c13 <InputState>
+ 1d2:	82 30       	cpi	r24, 0x02	; 2
+ 1d4:	a1 f0       	breq	.+40     	; 0x1fe <WriteInput+0x30>
+ 1d6:	18 f4       	brcc	.+6      	; 0x1de <WriteInput+0x10>
+ 1d8:	88 23       	and	r24, r24
+ 1da:	31 f0       	breq	.+12     	; 0x1e8 <WriteInput+0x1a>
+ 1dc:	08 95       	ret
+ 1de:	84 30       	cpi	r24, 0x04	; 4
+ 1e0:	11 f1       	breq	.+68     	; 0x226 <WriteInput+0x58>
+ 1e2:	86 30       	cpi	r24, 0x06	; 6
+ 1e4:	a1 f1       	breq	.+104    	; 0x24e <WriteInput+0x80>
+ 1e6:	08 95       	ret
+		case(POWER):
+			if(State.currentState == OFF){
+ 1e8:	80 91 15 3c 	lds	r24, 0x3C15	; 0x803c15 <State>
+ 1ec:	81 11       	cpse	r24, r1
+ 1ee:	04 c0       	rjmp	.+8      	; 0x1f8 <WriteInput+0x2a>
+				State.currentState = ONE;
+ 1f0:	81 e0       	ldi	r24, 0x01	; 1
+ 1f2:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 1f6:	08 95       	ret
+			}
+			else{
+				State.currentState = OFF;
+ 1f8:	10 92 15 3c 	sts	0x3C15, r1	; 0x803c15 <State>
+ 1fc:	08 95       	ret
+			}
+			break;
+		case(INCREMENT):
+			if(State.currentState==ONE){
+ 1fe:	80 91 15 3c 	lds	r24, 0x3C15	; 0x803c15 <State>
+ 202:	81 30       	cpi	r24, 0x01	; 1
+ 204:	21 f4       	brne	.+8      	; 0x20e <WriteInput+0x40>
+				State.currentState = TWO;
+ 206:	82 e0       	ldi	r24, 0x02	; 2
+ 208:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 20c:	08 95       	ret
+			}
+			else if(State.currentState == TWO){
+ 20e:	82 30       	cpi	r24, 0x02	; 2
+ 210:	21 f4       	brne	.+8      	; 0x21a <WriteInput+0x4c>
+				State.currentState=THREE;
+ 212:	83 e0       	ldi	r24, 0x03	; 3
+ 214:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 218:	08 95       	ret
+			}
+			else if(State.currentState == THREE) {
+ 21a:	83 30       	cpi	r24, 0x03	; 3
+ 21c:	11 f5       	brne	.+68     	; 0x262 <WriteInput+0x94>
+				State.currentState = BOOST;
+ 21e:	84 e0       	ldi	r24, 0x04	; 4
+ 220:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 224:	08 95       	ret
+			}
+			break;
+		case(DECREMENT):
+			if(State.currentState==BOOST){
+ 226:	80 91 15 3c 	lds	r24, 0x3C15	; 0x803c15 <State>
+ 22a:	84 30       	cpi	r24, 0x04	; 4
+ 22c:	21 f4       	brne	.+8      	; 0x236 <WriteInput+0x68>
+				State.currentState = THREE;
+ 22e:	83 e0       	ldi	r24, 0x03	; 3
+ 230:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 234:	08 95       	ret
+			}
+			else if(State.currentState == THREE){
+ 236:	83 30       	cpi	r24, 0x03	; 3
+ 238:	21 f4       	brne	.+8      	; 0x242 <WriteInput+0x74>
+				State.currentState=TWO;
+ 23a:	82 e0       	ldi	r24, 0x02	; 2
+ 23c:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 240:	08 95       	ret
+			}
+			else if(State.currentState == TWO) {
+ 242:	82 30       	cpi	r24, 0x02	; 2
+ 244:	71 f4       	brne	.+28     	; 0x262 <WriteInput+0x94>
+				State.currentState = ONE;
+ 246:	81 e0       	ldi	r24, 0x01	; 1
+ 248:	80 93 15 3c 	sts	0x3C15, r24	; 0x803c15 <State>
+ 24c:	08 95       	ret
+			}
+			break;
+		case(LIGHT):
+			if(LightState.currentState == LIGHT_ON){
+ 24e:	80 91 12 3c 	lds	r24, 0x3C12	; 0x803c12 <LightState>
+ 252:	81 11       	cpse	r24, r1
+ 254:	04 c0       	rjmp	.+8      	; 0x25e <WriteInput+0x90>
+				LightState.currentState=LIGHT_OFF;
+ 256:	81 e0       	ldi	r24, 0x01	; 1
+ 258:	80 93 12 3c 	sts	0x3C12, r24	; 0x803c12 <LightState>
+ 25c:	08 95       	ret
+			}
+			else{
+				LightState.currentState=LIGHT_ON;
+ 25e:	10 92 12 3c 	sts	0x3C12, r1	; 0x803c12 <LightState>
+ 262:	08 95       	ret
+
+00000264 <IR_Read>:
+state of the INPUT_STATE                                                                    */
+/************************************************************************/
+//IR Read function to decode incoming signal.
+void IR_Read(){
+	//If the signal is HIGH for 9ms, this means we are in START.
+	switch(NECState.currentState){
+ 264:	80 91 16 3c 	lds	r24, 0x3C16	; 0x803c16 <NECState>
+ 268:	81 30       	cpi	r24, 0x01	; 1
+ 26a:	59 f0       	breq	.+22     	; 0x282 <IR_Read+0x1e>
+ 26c:	18 f0       	brcs	.+6      	; 0x274 <IR_Read+0x10>
+ 26e:	82 30       	cpi	r24, 0x02	; 2
+ 270:	89 f0       	breq	.+34     	; 0x294 <IR_Read+0x30>
+ 272:	08 95       	ret
+		case(IDLE):
+		idle_flag=1;
+ 274:	81 e0       	ldi	r24, 0x01	; 1
+ 276:	90 e0       	ldi	r25, 0x00	; 0
+ 278:	80 93 0a 3c 	sts	0x3C0A, r24	; 0x803c0a <idle_flag>
+ 27c:	90 93 0b 3c 	sts	0x3C0B, r25	; 0x803c0b <idle_flag+0x1>
+				idle_flag=0;
+				NECState.currentState = START;
+			
+		}
+		*/
+			break;
+ 280:	08 95       	ret
+		case(START):
+			idle_flag =0;
+ 282:	10 92 0a 3c 	sts	0x3C0A, r1	; 0x803c0a <idle_flag>
+ 286:	10 92 0b 3c 	sts	0x3C0B, r1	; 0x803c0b <idle_flag+0x1>
+			
+			//4.5ms HIGH
+			enableIR_ISR();
+ 28a:	48 df       	rcall	.-368    	; 0x11c <enableIR_ISR>
+			NECState.currentState = COMMAND;
+ 28c:	82 e0       	ldi	r24, 0x02	; 2
+ 28e:	80 93 16 3c 	sts	0x3C16, r24	; 0x803c16 <NECState>
+			break;
+ 292:	08 95       	ret
+		
+			break;
+			*/
+			
+		case(COMMAND):
+			command_counter_flag = 1;
+ 294:	81 e0       	ldi	r24, 0x01	; 1
+ 296:	90 e0       	ldi	r25, 0x00	; 0
+ 298:	80 93 08 3c 	sts	0x3C08, r24	; 0x803c08 <command_counter_flag>
+ 29c:	90 93 09 3c 	sts	0x3C09, r25	; 0x803c09 <command_counter_flag+0x1>
+			if(tick_counter>=1000 && tick_counter<=1200){
+ 2a0:	80 91 06 3c 	lds	r24, 0x3C06	; 0x803c06 <tick_counter>
+ 2a4:	90 91 07 3c 	lds	r25, 0x3C07	; 0x803c07 <tick_counter+0x1>
+ 2a8:	88 3e       	cpi	r24, 0xE8	; 232
+ 2aa:	93 40       	sbci	r25, 0x03	; 3
+ 2ac:	04 f1       	brlt	.+64     	; 0x2ee <IR_Read+0x8a>
+ 2ae:	80 91 06 3c 	lds	r24, 0x3C06	; 0x803c06 <tick_counter>
+ 2b2:	90 91 07 3c 	lds	r25, 0x3C07	; 0x803c07 <tick_counter+0x1>
+ 2b6:	81 3b       	cpi	r24, 0xB1	; 177
+ 2b8:	94 40       	sbci	r25, 0x04	; 4
+ 2ba:	cc f4       	brge	.+50     	; 0x2ee <IR_Read+0x8a>
+				//add 0 to the register
+				command_register = command_register<<1;
+ 2bc:	80 91 00 3c 	lds	r24, 0x3C00	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 2c0:	90 91 01 3c 	lds	r25, 0x3C01	; 0x803c01 <__DATA_REGION_ORIGIN__+0x1>
+ 2c4:	a0 91 02 3c 	lds	r26, 0x3C02	; 0x803c02 <__DATA_REGION_ORIGIN__+0x2>
+ 2c8:	b0 91 03 3c 	lds	r27, 0x3C03	; 0x803c03 <__DATA_REGION_ORIGIN__+0x3>
+ 2cc:	88 0f       	add	r24, r24
+ 2ce:	99 1f       	adc	r25, r25
+ 2d0:	aa 1f       	adc	r26, r26
+ 2d2:	bb 1f       	adc	r27, r27
+ 2d4:	80 93 00 3c 	sts	0x3C00, r24	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 2d8:	90 93 01 3c 	sts	0x3C01, r25	; 0x803c01 <__DATA_REGION_ORIGIN__+0x1>
+ 2dc:	a0 93 02 3c 	sts	0x3C02, r26	; 0x803c02 <__DATA_REGION_ORIGIN__+0x2>
+ 2e0:	b0 93 03 3c 	sts	0x3C03, r27	; 0x803c03 <__DATA_REGION_ORIGIN__+0x3>
+				tick_counter = 0;
+ 2e4:	10 92 06 3c 	sts	0x3C06, r1	; 0x803c06 <tick_counter>
+ 2e8:	10 92 07 3c 	sts	0x3C07, r1	; 0x803c07 <tick_counter+0x1>
+ 2ec:	08 95       	ret
+			}
+			else if(tick_counter>=2200 && tick_counter<= 2300){
+ 2ee:	80 91 06 3c 	lds	r24, 0x3C06	; 0x803c06 <tick_counter>
+ 2f2:	90 91 07 3c 	lds	r25, 0x3C07	; 0x803c07 <tick_counter+0x1>
+ 2f6:	88 39       	cpi	r24, 0x98	; 152
+ 2f8:	98 40       	sbci	r25, 0x08	; 8
+ 2fa:	84 f1       	brlt	.+96     	; 0x35c <IR_Read+0xf8>
+ 2fc:	80 91 06 3c 	lds	r24, 0x3C06	; 0x803c06 <tick_counter>
+ 300:	90 91 07 3c 	lds	r25, 0x3C07	; 0x803c07 <tick_counter+0x1>
+ 304:	8d 3f       	cpi	r24, 0xFD	; 253
+ 306:	98 40       	sbci	r25, 0x08	; 8
+ 308:	4c f5       	brge	.+82     	; 0x35c <IR_Read+0xf8>
+				//add 1 to the register
+				command_register = command_register<<1;
+ 30a:	80 91 00 3c 	lds	r24, 0x3C00	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 30e:	90 91 01 3c 	lds	r25, 0x3C01	; 0x803c01 <__DATA_REGION_ORIGIN__+0x1>
+ 312:	a0 91 02 3c 	lds	r26, 0x3C02	; 0x803c02 <__DATA_REGION_ORIGIN__+0x2>
+ 316:	b0 91 03 3c 	lds	r27, 0x3C03	; 0x803c03 <__DATA_REGION_ORIGIN__+0x3>
+ 31a:	88 0f       	add	r24, r24
+ 31c:	99 1f       	adc	r25, r25
+ 31e:	aa 1f       	adc	r26, r26
+ 320:	bb 1f       	adc	r27, r27
+ 322:	80 93 00 3c 	sts	0x3C00, r24	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 326:	90 93 01 3c 	sts	0x3C01, r25	; 0x803c01 <__DATA_REGION_ORIGIN__+0x1>
+ 32a:	a0 93 02 3c 	sts	0x3C02, r26	; 0x803c02 <__DATA_REGION_ORIGIN__+0x2>
+ 32e:	b0 93 03 3c 	sts	0x3C03, r27	; 0x803c03 <__DATA_REGION_ORIGIN__+0x3>
+				command_register|= 0x0001;
+ 332:	80 91 00 3c 	lds	r24, 0x3C00	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 336:	90 91 01 3c 	lds	r25, 0x3C01	; 0x803c01 <__DATA_REGION_ORIGIN__+0x1>
+ 33a:	a0 91 02 3c 	lds	r26, 0x3C02	; 0x803c02 <__DATA_REGION_ORIGIN__+0x2>
+ 33e:	b0 91 03 3c 	lds	r27, 0x3C03	; 0x803c03 <__DATA_REGION_ORIGIN__+0x3>
+ 342:	81 60       	ori	r24, 0x01	; 1
+ 344:	80 93 00 3c 	sts	0x3C00, r24	; 0x803c00 <__DATA_REGION_ORIGIN__>
+ 348:	90 93 01 3c 	sts	0x3C01, r25	; 0x803c01 <__DATA_REGION_ORIGIN__+0x1>
+ 34c:	a0 93 02 3c 	sts	0x3C02, r26	; 0x803c02 <__DATA_REGION_ORIGIN__+0x2>
+ 350:	b0 93 03 3c 	sts	0x3C03, r27	; 0x803c03 <__DATA_REGION_ORIGIN__+0x3>
+				tick_counter = 0;
+ 354:	10 92 06 3c 	sts	0x3C06, r1	; 0x803c06 <tick_counter>
+ 358:	10 92 07 3c 	sts	0x3C07, r1	; 0x803c07 <tick_counter+0x1>
+ 35c:	08 95       	ret
+
+0000035e <Test_One>:
+#ifndef F_CPU
+#define F_CPU 20000000UL
+#endif
+#include <util/delay.h>
 void Test_One(){
- 20e:	cf 93       	push	r28
- 210:	df 93       	push	r29
+ 35e:	cf 93       	push	r28
+ 360:	df 93       	push	r29
 	
 	//Press power button
 	InputState.currentState = POWER;
- 212:	10 92 01 3c 	sts	0x3C01, r1	; 0x803c01 <InputState>
+ 362:	10 92 13 3c 	sts	0x3C13, r1	; 0x803c13 <InputState>
 	WriteInput();
- 216:	b0 df       	rcall	.-160    	; 0x178 <WriteInput>
+ 366:	33 df       	rcall	.-410    	; 0x1ce <WriteInput>
 	setState(); // 1
- 218:	5c df       	rcall	.-328    	; 0xd2 <setState>
-	
+ 368:	df de       	rcall	.-578    	; 0x128 <setState>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 36a:	2f ef       	ldi	r18, 0xFF	; 255
+ 36c:	88 e0       	ldi	r24, 0x08	; 8
+ 36e:	9d e3       	ldi	r25, 0x3D	; 61
+ 370:	21 50       	subi	r18, 0x01	; 1
+ 372:	80 40       	sbci	r24, 0x00	; 0
+ 374:	90 40       	sbci	r25, 0x00	; 0
+ 376:	e1 f7       	brne	.-8      	; 0x370 <Test_One+0x12>
+ 378:	00 c0       	rjmp	.+0      	; 0x37a <Test_One+0x1c>
+ 37a:	00 00       	nop
+	_delay_ms(1000);
 	//Press + button
 	InputState.currentState = INCREMENT;
- 21a:	d2 e0       	ldi	r29, 0x02	; 2
- 21c:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+ 37c:	d2 e0       	ldi	r29, 0x02	; 2
+ 37e:	d0 93 13 3c 	sts	0x3C13, r29	; 0x803c13 <InputState>
 	WriteInput();
- 220:	ab df       	rcall	.-170    	; 0x178 <WriteInput>
+ 382:	25 df       	rcall	.-438    	; 0x1ce <WriteInput>
 	setState(); // 2
- 222:	57 df       	rcall	.-338    	; 0xd2 <setState>
-	
+ 384:	d1 de       	rcall	.-606    	; 0x128 <setState>
+ 386:	2f ef       	ldi	r18, 0xFF	; 255
+ 388:	88 e0       	ldi	r24, 0x08	; 8
+ 38a:	9d e3       	ldi	r25, 0x3D	; 61
+ 38c:	21 50       	subi	r18, 0x01	; 1
+ 38e:	80 40       	sbci	r24, 0x00	; 0
+ 390:	90 40       	sbci	r25, 0x00	; 0
+ 392:	e1 f7       	brne	.-8      	; 0x38c <Test_One+0x2e>
+ 394:	00 c0       	rjmp	.+0      	; 0x396 <Test_One+0x38>
+ 396:	00 00       	nop
+	_delay_ms(1000);
 	//Press + button
 	InputState.currentState = INCREMENT;
- 224:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+ 398:	d0 93 13 3c 	sts	0x3C13, r29	; 0x803c13 <InputState>
 	WriteInput();
- 228:	a7 df       	rcall	.-178    	; 0x178 <WriteInput>
+ 39c:	18 df       	rcall	.-464    	; 0x1ce <WriteInput>
 	setState(); // 3
- 22a:	53 df       	rcall	.-346    	; 0xd2 <setState>
-	
+ 39e:	c4 de       	rcall	.-632    	; 0x128 <setState>
+ 3a0:	2f ef       	ldi	r18, 0xFF	; 255
+ 3a2:	84 e3       	ldi	r24, 0x34	; 52
+ 3a4:	9c e0       	ldi	r25, 0x0C	; 12
+ 3a6:	21 50       	subi	r18, 0x01	; 1
+ 3a8:	80 40       	sbci	r24, 0x00	; 0
+ 3aa:	90 40       	sbci	r25, 0x00	; 0
+ 3ac:	e1 f7       	brne	.-8      	; 0x3a6 <Test_One+0x48>
+ 3ae:	00 c0       	rjmp	.+0      	; 0x3b0 <Test_One+0x52>
+ 3b0:	00 00       	nop
+	_delay_ms(200);
 	//Press - button
 	InputState.currentState = DECREMENT;
- 22c:	c4 e0       	ldi	r28, 0x04	; 4
- 22e:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+ 3b2:	c4 e0       	ldi	r28, 0x04	; 4
+ 3b4:	c0 93 13 3c 	sts	0x3C13, r28	; 0x803c13 <InputState>
 	WriteInput();
- 232:	a2 df       	rcall	.-188    	; 0x178 <WriteInput>
+ 3b8:	0a df       	rcall	.-492    	; 0x1ce <WriteInput>
 	setState(); //2
- 234:	4e df       	rcall	.-356    	; 0xd2 <setState>
-	
+ 3ba:	b6 de       	rcall	.-660    	; 0x128 <setState>
+ 3bc:	2f ef       	ldi	r18, 0xFF	; 255
+ 3be:	84 e3       	ldi	r24, 0x34	; 52
+ 3c0:	9c e0       	ldi	r25, 0x0C	; 12
+ 3c2:	21 50       	subi	r18, 0x01	; 1
+ 3c4:	80 40       	sbci	r24, 0x00	; 0
+ 3c6:	90 40       	sbci	r25, 0x00	; 0
+ 3c8:	e1 f7       	brne	.-8      	; 0x3c2 <Test_One+0x64>
+ 3ca:	00 c0       	rjmp	.+0      	; 0x3cc <Test_One+0x6e>
+ 3cc:	00 00       	nop
+	_delay_ms(200);
 	//Press Light Button
 	InputState.currentState = LIGHT;
- 236:	86 e0       	ldi	r24, 0x06	; 6
- 238:	80 93 01 3c 	sts	0x3C01, r24	; 0x803c01 <InputState>
+ 3ce:	86 e0       	ldi	r24, 0x06	; 6
+ 3d0:	80 93 13 3c 	sts	0x3C13, r24	; 0x803c13 <InputState>
 	WriteInput();
- 23c:	9d df       	rcall	.-198    	; 0x178 <WriteInput>
+ 3d4:	fc de       	rcall	.-520    	; 0x1ce <WriteInput>
 	setState();
- 23e:	49 df       	rcall	.-366    	; 0xd2 <setState>
-	
+ 3d6:	a8 de       	rcall	.-688    	; 0x128 <setState>
+ 3d8:	2f ef       	ldi	r18, 0xFF	; 255
+ 3da:	84 e3       	ldi	r24, 0x34	; 52
+ 3dc:	9c e0       	ldi	r25, 0x0C	; 12
+ 3de:	21 50       	subi	r18, 0x01	; 1
+ 3e0:	80 40       	sbci	r24, 0x00	; 0
+ 3e2:	90 40       	sbci	r25, 0x00	; 0
+ 3e4:	e1 f7       	brne	.-8      	; 0x3de <Test_One+0x80>
+ 3e6:	00 c0       	rjmp	.+0      	; 0x3e8 <Test_One+0x8a>
+ 3e8:	00 00       	nop
+	_delay_ms(200);
 	//Press + button
 	InputState.currentState = INCREMENT;
- 240:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+ 3ea:	d0 93 13 3c 	sts	0x3C13, r29	; 0x803c13 <InputState>
 	WriteInput();
- 244:	99 df       	rcall	.-206    	; 0x178 <WriteInput>
+ 3ee:	ef de       	rcall	.-546    	; 0x1ce <WriteInput>
 	setState(); //3
- 246:	45 df       	rcall	.-374    	; 0xd2 <setState>
+ 3f0:	9b de       	rcall	.-714    	; 0x128 <setState>
+ 3f2:	2f ef       	ldi	r18, 0xFF	; 255
+ 3f4:	84 e3       	ldi	r24, 0x34	; 52
+ 3f6:	9c e0       	ldi	r25, 0x0C	; 12
+ 3f8:	21 50       	subi	r18, 0x01	; 1
+ 3fa:	80 40       	sbci	r24, 0x00	; 0
+ 3fc:	90 40       	sbci	r25, 0x00	; 0
+ 3fe:	e1 f7       	brne	.-8      	; 0x3f8 <Test_One+0x9a>
+ 400:	00 c0       	rjmp	.+0      	; 0x402 <__DATA_REGION_LENGTH__+0x2>
+ 402:	00 00       	nop
+	_delay_ms(200);
+	//Press + button
+	InputState.currentState = INCREMENT;
+ 404:	d0 93 13 3c 	sts	0x3C13, r29	; 0x803c13 <InputState>
+	WriteInput();
+ 408:	e2 de       	rcall	.-572    	; 0x1ce <WriteInput>
+	setState(); //4
+ 40a:	8e de       	rcall	.-740    	; 0x128 <setState>
 	
 	//Press + button
 	InputState.currentState = INCREMENT;
- 248:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
+ 40c:	d0 93 13 3c 	sts	0x3C13, r29	; 0x803c13 <InputState>
 	WriteInput();
- 24c:	95 df       	rcall	.-214    	; 0x178 <WriteInput>
+ 410:	de de       	rcall	.-580    	; 0x1ce <WriteInput>
 	setState(); //4
- 24e:	41 df       	rcall	.-382    	; 0xd2 <setState>
-	
-	//Press + button
-	InputState.currentState = INCREMENT;
- 250:	d0 93 01 3c 	sts	0x3C01, r29	; 0x803c01 <InputState>
-	WriteInput();
- 254:	91 df       	rcall	.-222    	; 0x178 <WriteInput>
-	setState(); //4
- 256:	3d df       	rcall	.-390    	; 0xd2 <setState>
-	
+ 412:	8a de       	rcall	.-748    	; 0x128 <setState>
+ 414:	2f ef       	ldi	r18, 0xFF	; 255
+ 416:	88 e0       	ldi	r24, 0x08	; 8
+ 418:	9d e3       	ldi	r25, 0x3D	; 61
+ 41a:	21 50       	subi	r18, 0x01	; 1
+ 41c:	80 40       	sbci	r24, 0x00	; 0
+ 41e:	90 40       	sbci	r25, 0x00	; 0
+ 420:	e1 f7       	brne	.-8      	; 0x41a <__DATA_REGION_LENGTH__+0x1a>
+ 422:	00 c0       	rjmp	.+0      	; 0x424 <__DATA_REGION_LENGTH__+0x24>
+ 424:	00 00       	nop
+	_delay_ms(1000);
 	//Press - button
 	InputState.currentState = DECREMENT;
- 258:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+ 426:	c0 93 13 3c 	sts	0x3C13, r28	; 0x803c13 <InputState>
 	WriteInput();
- 25c:	8d df       	rcall	.-230    	; 0x178 <WriteInput>
+ 42a:	d1 de       	rcall	.-606    	; 0x1ce <WriteInput>
 	setState(); //3
- 25e:	39 df       	rcall	.-398    	; 0xd2 <setState>
+ 42c:	7d de       	rcall	.-774    	; 0x128 <setState>
+ 42e:	2f ef       	ldi	r18, 0xFF	; 255
+ 430:	88 e0       	ldi	r24, 0x08	; 8
+ 432:	9d e3       	ldi	r25, 0x3D	; 61
+ 434:	21 50       	subi	r18, 0x01	; 1
+ 436:	80 40       	sbci	r24, 0x00	; 0
+ 438:	90 40       	sbci	r25, 0x00	; 0
+ 43a:	e1 f7       	brne	.-8      	; 0x434 <__DATA_REGION_LENGTH__+0x34>
+ 43c:	00 c0       	rjmp	.+0      	; 0x43e <__DATA_REGION_LENGTH__+0x3e>
+ 43e:	00 00       	nop
+	_delay_ms(1000);
 	//Press - button
 	InputState.currentState = DECREMENT;
- 260:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+ 440:	c0 93 13 3c 	sts	0x3C13, r28	; 0x803c13 <InputState>
 	WriteInput();
- 264:	89 df       	rcall	.-238    	; 0x178 <WriteInput>
+ 444:	c4 de       	rcall	.-632    	; 0x1ce <WriteInput>
 	setState(); //2
- 266:	35 df       	rcall	.-406    	; 0xd2 <setState>
+ 446:	70 de       	rcall	.-800    	; 0x128 <setState>
+ 448:	2f ef       	ldi	r18, 0xFF	; 255
+ 44a:	88 e0       	ldi	r24, 0x08	; 8
+ 44c:	9d e3       	ldi	r25, 0x3D	; 61
+ 44e:	21 50       	subi	r18, 0x01	; 1
+ 450:	80 40       	sbci	r24, 0x00	; 0
+ 452:	90 40       	sbci	r25, 0x00	; 0
+ 454:	e1 f7       	brne	.-8      	; 0x44e <__DATA_REGION_LENGTH__+0x4e>
+ 456:	00 c0       	rjmp	.+0      	; 0x458 <__DATA_REGION_LENGTH__+0x58>
+ 458:	00 00       	nop
+	_delay_ms(1000);
 	//Press - button
 	InputState.currentState = DECREMENT;
- 268:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+ 45a:	c0 93 13 3c 	sts	0x3C13, r28	; 0x803c13 <InputState>
 	WriteInput();
- 26c:	85 df       	rcall	.-246    	; 0x178 <WriteInput>
+ 45e:	b7 de       	rcall	.-658    	; 0x1ce <WriteInput>
 	setState(); //1
- 26e:	31 df       	rcall	.-414    	; 0xd2 <setState>
-	
+ 460:	63 de       	rcall	.-826    	; 0x128 <setState>
+ 462:	2f ef       	ldi	r18, 0xFF	; 255
+ 464:	88 e0       	ldi	r24, 0x08	; 8
+ 466:	9d e3       	ldi	r25, 0x3D	; 61
+ 468:	21 50       	subi	r18, 0x01	; 1
+ 46a:	80 40       	sbci	r24, 0x00	; 0
+ 46c:	90 40       	sbci	r25, 0x00	; 0
+ 46e:	e1 f7       	brne	.-8      	; 0x468 <__DATA_REGION_LENGTH__+0x68>
+ 470:	00 c0       	rjmp	.+0      	; 0x472 <__DATA_REGION_LENGTH__+0x72>
+ 472:	00 00       	nop
+	_delay_ms(1000);
 	//Press - button
 	InputState.currentState = DECREMENT;
- 270:	c0 93 01 3c 	sts	0x3C01, r28	; 0x803c01 <InputState>
+ 474:	c0 93 13 3c 	sts	0x3C13, r28	; 0x803c13 <InputState>
 	WriteInput();
- 274:	81 df       	rcall	.-254    	; 0x178 <WriteInput>
+ 478:	aa de       	rcall	.-684    	; 0x1ce <WriteInput>
 	setState(); //1
- 276:	2d df       	rcall	.-422    	; 0xd2 <setState>
-	
+ 47a:	56 de       	rcall	.-852    	; 0x128 <setState>
+ 47c:	2f ef       	ldi	r18, 0xFF	; 255
+ 47e:	88 e0       	ldi	r24, 0x08	; 8
+ 480:	9d e3       	ldi	r25, 0x3D	; 61
+ 482:	21 50       	subi	r18, 0x01	; 1
+ 484:	80 40       	sbci	r24, 0x00	; 0
+ 486:	90 40       	sbci	r25, 0x00	; 0
+ 488:	e1 f7       	brne	.-8      	; 0x482 <__DATA_REGION_LENGTH__+0x82>
+ 48a:	00 c0       	rjmp	.+0      	; 0x48c <__DATA_REGION_LENGTH__+0x8c>
+ 48c:	00 00       	nop
+	_delay_ms(1000);
 	//Press power button
 	InputState.currentState = POWER;
- 278:	10 92 01 3c 	sts	0x3C01, r1	; 0x803c01 <InputState>
+ 48e:	10 92 13 3c 	sts	0x3C13, r1	; 0x803c13 <InputState>
 	WriteInput();
- 27c:	7d df       	rcall	.-262    	; 0x178 <WriteInput>
-	setState(); // OFF	
- 27e:	29 df       	rcall	.-430    	; 0xd2 <setState>
- 280:	df 91       	pop	r29
- 282:	cf 91       	pop	r28
- 284:	08 95       	ret
+ 492:	9d de       	rcall	.-710    	; 0x1ce <WriteInput>
+	setState(); // OFF
+ 494:	49 de       	rcall	.-878    	; 0x128 <setState>
+ 496:	2f ef       	ldi	r18, 0xFF	; 255
+ 498:	88 e0       	ldi	r24, 0x08	; 8
+ 49a:	9d e3       	ldi	r25, 0x3D	; 61
+ 49c:	21 50       	subi	r18, 0x01	; 1
+ 49e:	80 40       	sbci	r24, 0x00	; 0
+ 4a0:	90 40       	sbci	r25, 0x00	; 0
+ 4a2:	e1 f7       	brne	.-8      	; 0x49c <__DATA_REGION_LENGTH__+0x9c>
+ 4a4:	00 c0       	rjmp	.+0      	; 0x4a6 <__DATA_REGION_LENGTH__+0xa6>
+ 4a6:	00 00       	nop
+	_delay_ms(1000);
+ 4a8:	df 91       	pop	r29
+ 4aa:	cf 91       	pop	r28
+ 4ac:	08 95       	ret
 
-00000286 <main>:
-
-//Global Variables
-int state = 0;
-int main(void)
-{
+000004ae <main>:
+	CCP = 0xD8;
+	CLKCTRL.MCLKCTRLB = 0x13;
+	CCP = 0xD8;
+	CLKCTRL.MCLKLOCK =0x01;
+	*/
+	PORTD.DIR = (1<<LED_ON_OFF);
+ 4ae:	e0 e6       	ldi	r30, 0x60	; 96
+ 4b0:	f4 e0       	ldi	r31, 0x04	; 4
+ 4b2:	82 e0       	ldi	r24, 0x02	; 2
+ 4b4:	80 83       	st	Z, r24
+	PORTD.OUT = 0x00; // Close All LEDs
+ 4b6:	14 82       	std	Z+4, r1	; 0x04
 	Initialize();
- 286:	15 df       	rcall	.-470    	; 0xb2 <Initialize>
+ 4b8:	fc dd       	rcall	.-1032   	; 0xb2 <Initialize>
 	Test_One();
- 288:	c2 df       	rcall	.-124    	; 0x20e <Test_One>
- 28a:	ff cf       	rjmp	.-2      	; 0x28a <main+0x4>
+ 4ba:	51 df       	rcall	.-350    	; 0x35e <Test_One>
+ 4bc:	ff cf       	rjmp	.-2      	; 0x4bc <main+0xe>
 
-0000028c <_exit>:
- 28c:	f8 94       	cli
+000004be <__vector_6>:
 
-0000028e <__stop_program>:
- 28e:	ff cf       	rjmp	.-2      	; 0x28e <__stop_program>
+/************************************************************************/
+/* Timer interrupt increases a counter every 1ms.                                                                     */
+/************************************************************************/
+
+ISR(PORTA_PORT_vect){
+ 4be:	1f 92       	push	r1
+ 4c0:	0f 92       	push	r0
+ 4c2:	0f b6       	in	r0, 0x3f	; 63
+ 4c4:	0f 92       	push	r0
+ 4c6:	11 24       	eor	r1, r1
+ 4c8:	2f 93       	push	r18
+ 4ca:	3f 93       	push	r19
+ 4cc:	4f 93       	push	r20
+ 4ce:	5f 93       	push	r21
+ 4d0:	6f 93       	push	r22
+ 4d2:	7f 93       	push	r23
+ 4d4:	8f 93       	push	r24
+ 4d6:	9f 93       	push	r25
+ 4d8:	af 93       	push	r26
+ 4da:	bf 93       	push	r27
+ 4dc:	ef 93       	push	r30
+ 4de:	ff 93       	push	r31
+	IR_Read();
+ 4e0:	c1 de       	rcall	.-638    	; 0x264 <IR_Read>
+	disableIR_ISR(); //  disable interrupt 
+ 4e2:	17 de       	rcall	.-978    	; 0x112 <disableIR_ISR>
+}
+ 4e4:	ff 91       	pop	r31
+ 4e6:	ef 91       	pop	r30
+ 4e8:	bf 91       	pop	r27
+ 4ea:	af 91       	pop	r26
+ 4ec:	9f 91       	pop	r25
+ 4ee:	8f 91       	pop	r24
+ 4f0:	7f 91       	pop	r23
+ 4f2:	6f 91       	pop	r22
+ 4f4:	5f 91       	pop	r21
+ 4f6:	4f 91       	pop	r20
+ 4f8:	3f 91       	pop	r19
+ 4fa:	2f 91       	pop	r18
+ 4fc:	0f 90       	pop	r0
+ 4fe:	0f be       	out	0x3f, r0	; 63
+ 500:	0f 90       	pop	r0
+ 502:	1f 90       	pop	r1
+ 504:	18 95       	reti
+
+00000506 <__vector_9>:
+ISR(TCA0_CMP0_vect){
+ 506:	1f 92       	push	r1
+ 508:	0f 92       	push	r0
+ 50a:	0f b6       	in	r0, 0x3f	; 63
+ 50c:	0f 92       	push	r0
+ 50e:	11 24       	eor	r1, r1
+ 510:	2f 93       	push	r18
+ 512:	3f 93       	push	r19
+ 514:	4f 93       	push	r20
+ 516:	5f 93       	push	r21
+ 518:	6f 93       	push	r22
+ 51a:	7f 93       	push	r23
+ 51c:	8f 93       	push	r24
+ 51e:	9f 93       	push	r25
+ 520:	af 93       	push	r26
+ 522:	bf 93       	push	r27
+ 524:	ef 93       	push	r30
+ 526:	ff 93       	push	r31
+/*
+	if(counter==1000){
+		idle_flag=1;
+	}*/
+	//IDLE to START case
+	if(idle_flag==1){
+ 528:	80 91 0a 3c 	lds	r24, 0x3C0A	; 0x803c0a <idle_flag>
+ 52c:	90 91 0b 3c 	lds	r25, 0x3C0B	; 0x803c0b <idle_flag+0x1>
+ 530:	01 97       	sbiw	r24, 0x01	; 1
+ 532:	69 f5       	brne	.+90     	; 0x58e <__vector_9+0x88>
+		
+		if((PORTA.IN & (1<<IR_INPUT)) == 0 ){
+ 534:	80 91 08 04 	lds	r24, 0x0408	; 0x800408 <__RODATA_PM_OFFSET__+0x7fc408>
+ 538:	83 fd       	sbrc	r24, 3
+ 53a:	21 c0       	rjmp	.+66     	; 0x57e <__vector_9+0x78>
+			counter++;
+ 53c:	80 91 0e 3c 	lds	r24, 0x3C0E	; 0x803c0e <counter>
+ 540:	90 91 0f 3c 	lds	r25, 0x3C0F	; 0x803c0f <counter+0x1>
+ 544:	a0 91 10 3c 	lds	r26, 0x3C10	; 0x803c10 <counter+0x2>
+ 548:	b0 91 11 3c 	lds	r27, 0x3C11	; 0x803c11 <counter+0x3>
+ 54c:	01 96       	adiw	r24, 0x01	; 1
+ 54e:	a1 1d       	adc	r26, r1
+ 550:	b1 1d       	adc	r27, r1
+ 552:	80 93 0e 3c 	sts	0x3C0E, r24	; 0x803c0e <counter>
+ 556:	90 93 0f 3c 	sts	0x3C0F, r25	; 0x803c0f <counter+0x1>
+ 55a:	a0 93 10 3c 	sts	0x3C10, r26	; 0x803c10 <counter+0x2>
+ 55e:	b0 93 11 3c 	sts	0x3C11, r27	; 0x803c11 <counter+0x3>
+			if(counter==8500){
+ 562:	84 33       	cpi	r24, 0x34	; 52
+ 564:	91 42       	sbci	r25, 0x21	; 33
+ 566:	a1 05       	cpc	r26, r1
+ 568:	b1 05       	cpc	r27, r1
+ 56a:	89 f4       	brne	.+34     	; 0x58e <__vector_9+0x88>
+				NECState.currentState = START;
+ 56c:	81 e0       	ldi	r24, 0x01	; 1
+ 56e:	80 93 16 3c 	sts	0x3C16, r24	; 0x803c16 <NECState>
+				idle_flag=0;
+ 572:	10 92 0a 3c 	sts	0x3C0A, r1	; 0x803c0a <idle_flag>
+ 576:	10 92 0b 3c 	sts	0x3C0B, r1	; 0x803c0b <idle_flag+0x1>
+				IR_Read();
+ 57a:	74 de       	rcall	.-792    	; 0x264 <IR_Read>
+ 57c:	08 c0       	rjmp	.+16     	; 0x58e <__vector_9+0x88>
+			}
+		}
+		else{
+			start_counter = 0;//if signal is less than 9ms, reset counter and flag;
+ 57e:	10 92 0c 3c 	sts	0x3C0C, r1	; 0x803c0c <start_counter>
+ 582:	10 92 0d 3c 	sts	0x3C0D, r1	; 0x803c0d <start_counter+0x1>
+			idle_flag=0;
+ 586:	10 92 0a 3c 	sts	0x3C0A, r1	; 0x803c0a <idle_flag>
+ 58a:	10 92 0b 3c 	sts	0x3C0B, r1	; 0x803c0b <idle_flag+0x1>
+		}
+	}
+	//AFTER START
+	if(NECState.currentState == COMMAND){
+ 58e:	80 91 16 3c 	lds	r24, 0x3C16	; 0x803c16 <NECState>
+ 592:	82 30       	cpi	r24, 0x02	; 2
+ 594:	e1 f4       	brne	.+56     	; 0x5ce <__vector_9+0xc8>
+		
+		if(command_counter_flag==1){
+ 596:	80 91 08 3c 	lds	r24, 0x3C08	; 0x803c08 <command_counter_flag>
+ 59a:	90 91 09 3c 	lds	r25, 0x3C09	; 0x803c09 <command_counter_flag+0x1>
+ 59e:	01 97       	sbiw	r24, 0x01	; 1
+ 5a0:	b1 f4       	brne	.+44     	; 0x5ce <__vector_9+0xc8>
+			tick_counter++;
+ 5a2:	80 91 06 3c 	lds	r24, 0x3C06	; 0x803c06 <tick_counter>
+ 5a6:	90 91 07 3c 	lds	r25, 0x3C07	; 0x803c07 <tick_counter+0x1>
+ 5aa:	01 96       	adiw	r24, 0x01	; 1
+ 5ac:	80 93 06 3c 	sts	0x3C06, r24	; 0x803c06 <tick_counter>
+ 5b0:	90 93 07 3c 	sts	0x3C07, r25	; 0x803c07 <tick_counter+0x1>
+			total_tick_counter++;
+ 5b4:	80 91 04 3c 	lds	r24, 0x3C04	; 0x803c04 <total_tick_counter>
+ 5b8:	90 91 05 3c 	lds	r25, 0x3C05	; 0x803c05 <total_tick_counter+0x1>
+ 5bc:	01 96       	adiw	r24, 0x01	; 1
+ 5be:	80 93 04 3c 	sts	0x3C04, r24	; 0x803c04 <total_tick_counter>
+ 5c2:	90 93 05 3c 	sts	0x3C05, r25	; 0x803c05 <total_tick_counter+0x1>
+			if(total_tick_counter>= 54000 ){
+ 5c6:	80 91 04 3c 	lds	r24, 0x3C04	; 0x803c04 <total_tick_counter>
+ 5ca:	90 91 05 3c 	lds	r25, 0x3C05	; 0x803c05 <total_tick_counter+0x1>
+		}
+		
+	}
+	
+	
+}
+ 5ce:	ff 91       	pop	r31
+ 5d0:	ef 91       	pop	r30
+ 5d2:	bf 91       	pop	r27
+ 5d4:	af 91       	pop	r26
+ 5d6:	9f 91       	pop	r25
+ 5d8:	8f 91       	pop	r24
+ 5da:	7f 91       	pop	r23
+ 5dc:	6f 91       	pop	r22
+ 5de:	5f 91       	pop	r21
+ 5e0:	4f 91       	pop	r20
+ 5e2:	3f 91       	pop	r19
+ 5e4:	2f 91       	pop	r18
+ 5e6:	0f 90       	pop	r0
+ 5e8:	0f be       	out	0x3f, r0	; 63
+ 5ea:	0f 90       	pop	r0
+ 5ec:	1f 90       	pop	r1
+ 5ee:	18 95       	reti
+
+000005f0 <_exit>:
+ 5f0:	f8 94       	cli
+
+000005f2 <__stop_program>:
+ 5f2:	ff cf       	rjmp	.-2      	; 0x5f2 <__stop_program>

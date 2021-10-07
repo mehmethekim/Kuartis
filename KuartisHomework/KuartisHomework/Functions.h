@@ -1,6 +1,8 @@
-//Global Variables
-
-
+#include <avr/interrupt.h>
+//Functions
+/************************************************************************/
+/* Initializes LEDs and MOTOR ports. Sets the initial state to START State                                                                     */
+/************************************************************************/
 /************************************************************************/
 /* This enumerator holds the states of the hood appliance. Can be incremented
 or decremented by the controller.                                                                    */
@@ -32,6 +34,32 @@ typedef enum{
 	LIGHT,
 	LIGHT_HOLD
 }INPUT_STATE;
+/************************************************************************/
+/* This enumerator holds the states of the infrared NEC protocol.                                                                     */
+/************************************************************************/
+typedef enum{
+	IDLE,
+	START,
+	//ADDRESS,
+	//ADDRESS_INV,
+	COMMAND,//32 bit information
+	//COMMAND_INV,
+	END,
+	REPEAT
+	}IR_STATE;
+/************************************************************************/
+/* This enumerator holds the repeated signals state in NEC protocol.                                                                     */
+/************************************************************************/
+typedef enum{
+	NO_REPEAT,
+	POWER_REPEAT,
+	INC_REPEAT,
+	DEC_REPEAT,
+	LIGHT_REPEAT
+	}REPEAT_STATE;
+/************************************************************************/
+/* This struct holds the current state of the light.                                                                     */
+/************************************************************************/
 typedef struct LIGHT_STATE_INFO{
 	LIGHT_STATE currentState;
 }LIGHT_STATE_INFO;
@@ -48,16 +76,33 @@ typedef struct STATE_INFO{
 typedef struct INPUT_STATE_INFO{
 	INPUT_STATE currentState;
 }INPUT_STATE_INFO;
-
+/************************************************************************/
+/* Holds the current state of Infrared NEC protocol                                                                     */
+/************************************************************************/
+typedef struct IR_STATE_INFO{
+	IR_STATE currentState;
+	}IR_STATE_INFO;
+/************************************************************************/
+/* Holds the current state of repeated signal.                                                                     */
+/************************************************************************/
+typedef struct REPEAT_STATE_INFO{
+	REPEAT_STATE currentState;
+}REPEAT_STATE_INFO;
+/************************************************************************/
+/* Local State Variables                                                                     */
+/************************************************************************/
+IR_STATE_INFO NECState;
 INPUT_STATE_INFO InputState;
 STATE_INFO State;
 LIGHT_STATE_INFO LightState;
-
-
-//Functions
-/************************************************************************/
-/* Initializes LEDs and MOTOR ports. Sets the initial state to START State                                                                     */
-/************************************************************************/
+REPEAT_STATE_INFO RepeatState;
+int32_t counter = 0;
+int start_counter=0;
+volatile int16_t idle_flag = 0;
+volatile int16_t command_counter_flag=0;
+volatile int16_t tick_counter = 0;
+volatile int16_t total_tick_counter = 0;
+volatile int32_t command_register = 0x0000;
 void Initialize(){
 	//Initialize LEDs
 	PORTA.DIR = (1<<LED_1) | (1<<LED_2) | (1<<LED_3) | (1<<LED_4) ;
@@ -67,13 +112,43 @@ void Initialize(){
 	
 	PORTD.DIR = (1<<MOTOR_RELAY_1) | (1<<MOTOR_RELAY_2)  |(1<<MOTOR_RELAY_3) |(1<<MOTOR_RELAY_4);
 	PORTD.OUT = 0x00; //Close all motors
+	//Initialize Buzzer
+	PORTD.DIR |= (1<<BUZZER);
+	PORTD.OUT &= ~(1<<BUZZER);
+	//Initialize IR Receiver
+	PORTA.DIR &= ~(1<<IR_INPUT);
+	
+	PORTA.PIN3CTRL |= 0b00000011; //SET ISC to 0x3 to have falling edge trigger. ISC is last 3 bits. Set to 011.
+	SREG |= (1<<GLOBAL_INT_ENABLE); //Enable Interrupts
+	
+	
 	
 	//Initial state
 	State.currentState = OFF;
 	LightState.currentState = OFF;
+	NECState.currentState = IDLE;
+	
+	//Timer initialize
+	 
+	
+	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
+	TCA0.SINGLE.CMP0 = 0x14;// 20 tick count for 1us count @20Mhz;
+	
+	TCA0.SINGLE.INTCTRL = (1<<CMP_0);
 }
 
-
+/************************************************************************/
+/* This function disables interupt for IR receiver                                                                     */
+/************************************************************************/
+void disableIR_ISR(){
+	PORTA.PIN3CTRL &= 0b00000000;
+}
+/************************************************************************/
+/* This function enables interrupt for IR Receiver                                                                     */
+/************************************************************************/
+void enableIR_ISR(){
+	PORTA.PIN3CTRL |= 0b00000011;
+}
 void setState(){
 	
 	switch(State.currentState){
@@ -172,72 +247,59 @@ void WriteInput(){
 /* This function reads the Infrared input from the controller and changes the
 state of the INPUT_STATE                                                                    */
 /************************************************************************/
-//Early Read function for debug purposes
-void IR_Read_Debug(){
-}
-
-void Test_One(){
-	
-	//Press power button
-	InputState.currentState = POWER;
-	WriteInput();
-	setState(); // 1
-	
-	//Press + button
-	InputState.currentState = INCREMENT;
-	WriteInput();
-	setState(); // 2
-	
-	//Press + button
-	InputState.currentState = INCREMENT;
-	WriteInput();
-	setState(); // 3
-	
-	//Press - button
-	InputState.currentState = DECREMENT;
-	WriteInput();
-	setState(); //2
-	
-	//Press Light Button
-	InputState.currentState = LIGHT;
-	WriteInput();
-	setState();
-	
-	//Press + button
-	InputState.currentState = INCREMENT;
-	WriteInput();
-	setState(); //3
-	
-	//Press + button
-	InputState.currentState = INCREMENT;
-	WriteInput();
-	setState(); //4
-	
-	//Press + button
-	InputState.currentState = INCREMENT;
-	WriteInput();
-	setState(); //4
-	
-	//Press - button
-	InputState.currentState = DECREMENT;
-	WriteInput();
-	setState(); //3
-	//Press - button
-	InputState.currentState = DECREMENT;
-	WriteInput();
-	setState(); //2
-	//Press - button
-	InputState.currentState = DECREMENT;
-	WriteInput();
-	setState(); //1
-	
-	//Press - button
-	InputState.currentState = DECREMENT;
-	WriteInput();
-	setState(); //1
-	
-	//Press power button
-	InputState.currentState = POWER;
-	WriteInput();
-	setState(); // OFF	
+//IR Read function to decode incoming signal.
+void IR_Read(){
+	//If the signal is HIGH for 9ms, this means we are in START.
+	switch(NECState.currentState){
+		case(IDLE):
+		idle_flag=1;
+		/*
+		if(start_counter==8500){
+				start_counter = 0; //reset counter
+				idle_flag=0;
+				NECState.currentState = START;
+			
+		}
+		*/
+			break;
+		case(START):
+			idle_flag =0;
+			
+			//4.5ms HIGH
+			enableIR_ISR();
+			NECState.currentState = COMMAND;
+			break;
+			/*
+		case(ADDRESS):
+			
+			break;
+		case(ADDRESS_INV):
+		
+			break;
+			*/
+			
+		case(COMMAND):
+			command_counter_flag = 1;
+			if(tick_counter>=1000 && tick_counter<=1200){
+				//add 0 to the register
+				command_register = command_register<<1;
+				tick_counter = 0;
+			}
+			else if(tick_counter>=2200 && tick_counter<= 2300){
+				//add 1 to the register
+				command_register = command_register<<1;
+				command_register|= 0x0001;
+				tick_counter = 0;
+			}
+			break;
+		
+		case(END):
+		
+			break;
+		case(REPEAT):
+			
+			break;
+		default:
+			break;
+	}
 }
