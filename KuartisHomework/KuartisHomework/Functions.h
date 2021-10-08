@@ -13,7 +13,9 @@ typedef enum{
 	ONE,
 	TWO,
 	THREE,
-	BOOST
+	BOOST,
+	DEV_MODE,
+	BRIGHT_ADJ
 }STATE;
 /************************************************************************/
 /* This enumerator holds the state of the light. Either on/off. Controlled by the light button.                                                                     */
@@ -110,9 +112,10 @@ volatile int16_t total_tick_counter = 0;
 volatile int32_t command_register = 0x0000;
 volatile int32_t bit_counter = 0;
 volatile int16_t i;
-volatile int16_t hold_counter = 0;
+volatile int32_t hold_counter = 0;
 volatile int16_t hold_flag = 0;
 volatile int32_t boost_timer =0;
+volatile int32_t boost_total_timer = 0;
 
 //Function Prototypes
 void Initialize();
@@ -170,7 +173,7 @@ bool VerifyAddress(){
 }
 void GenerateRepeatCode(){
 	tick_counter=0;
-	hold_counter++;
+	hold_flag=1;
 	if(InputState.currentState==POWER || InputState.currentState==POWER_HOLD){
 		InputState.currentState=POWER_HOLD;
 		
@@ -248,6 +251,7 @@ void setState(){
 		case(OFF):
 			PORTA.OUT = 0xFF; // All LEDs OFF
 			PORTD.OUT = 0x00; // All MOTORs OFF
+			boost_total_timer = 0;//Coming from BOOST state, reset boost timer.
 			break;
 		case(ONE):
 			//Only LED_1 is on.
@@ -268,11 +272,13 @@ void setState(){
 			break;
 		case(THREE):
 			//LEDs 1-2-3 are on.
+			boost_total_timer = 0; // Coming from BOOST state, reset boost timer.
 			PORTA.OUT = 0xFF;
 			PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_2) & ~(1<<LED_3);
 			
 			PORTD.OUT &= ~(0<<MOTOR_RELAY_4);//CLOSE MOTOR_4
 			PORTD.OUT |= (1<<MOTOR_RELAY_3);//OPEN MOTOR_3
+			
 			//
 			break;
 		case(BOOST):
@@ -390,7 +396,7 @@ void IR_Read(){
 				break;
 			}
 			
-		
+			//hold_counter = 0; // Reset hold counter if not received repeat signal.
 			cli();
 			RTC.CNT = 0;
 			sei();
@@ -435,10 +441,11 @@ void IR_Read(){
 			if(VerifyAddress()){
 				DecodeCommand();
 			}
-			//wait for 30ms to process and reset,
+			//wait for 20ms to process and reset,
+			/*
 			while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 20000){
 				
-			}
+			}*/
 			//reset the process
 			//wait for 40ms to read repeat
 			/*
@@ -462,7 +469,34 @@ void IR_Read(){
 			}
 			else{ 
 			}*/
-			
+			idle_flag=1;
+			counter = 0;
+			cli();
+			RTC.CNT = 0;
+			sei();
+			//If we did not received messages for more than 100 ms, it means no repeat. Change flag
+			while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 50000){
+				
+			}
+			if(counter*RTC_TICK >= 40000){
+				
+				
+				hold_flag=0;
+				hold_counter = 0;
+				if(InputState.currentState==POWER_HOLD){
+					InputState.currentState=POWER;
+				}
+				else if(InputState.currentState==INCREMENT_HOLD){
+					InputState.currentState=INCREMENT;
+				}
+				else if(InputState.currentState==DECREMENT_HOLD){
+					InputState.currentState=DECREMENT;
+				}
+				else if(InputState.currentState==LIGHT_HOLD){
+					InputState.currentState=LIGHT;
+				}
+			}
+			idle_flag=0;
 			tick_counter=0;
 			cli();
 			RTC.CNT = 0;

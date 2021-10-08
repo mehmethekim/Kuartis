@@ -81,9 +81,25 @@ ISR(RTC_CNT_vect){
 		}
 	if(State.currentState==BOOST){
 		boost_timer++;
-		if(boost_timer*RTC_TICK >= 1000000){ // 1sec
+		boost_total_timer++;
+		if(boost_timer*RTC_TICK >= ONE_SEC){ // 1sec
 			PORTA.OUT ^= (1<<LED_4);
 			boost_timer=0;
+		}
+		if(boost_total_timer*RTC_TICK>=BOOST_MAX_30SEC){
+			State.currentState = THREE;
+			setState();
+		}
+	}
+	if(hold_flag==1){
+		hold_counter++;
+		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== POWER_HOLD){//After 4 sec, go to developer mode.
+				State.currentState = DEV_MODE;
+				setState();
+		}
+		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== LIGHT_HOLD){
+			State.currentState = BRIGHT_ADJ;
+			setState();
 		}
 	}
 }
