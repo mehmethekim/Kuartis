@@ -76,9 +76,14 @@ ISR(RTC_CNT_vect){
 		counter++;
 		}
 	if(command_counter_flag==1){
-			
-				tick_counter++;
-				total_tick_counter++;	
+		tick_counter++;
+		total_tick_counter++;	
 		}
-	
+	if(State.currentState==BOOST){
+		boost_timer++;
+		if(boost_timer*RTC_TICK >= 1000000){ // 1sec
+			PORTA.OUT ^= (1<<LED_4);
+			boost_timer=0;
+		}
+	}
 }

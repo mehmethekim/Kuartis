@@ -110,6 +110,9 @@ volatile int16_t total_tick_counter = 0;
 volatile int32_t command_register = 0x0000;
 volatile int32_t bit_counter = 0;
 volatile int16_t i;
+volatile int16_t hold_counter = 0;
+volatile int16_t hold_flag = 0;
+volatile int32_t boost_timer =0;
 
 //Function Prototypes
 void Initialize();
@@ -140,31 +143,20 @@ void Initialize(){
 	
 	PORTA.PIN3CTRL |= 0b00000011; //SET ISC to 0x3 to have falling edge trigger. ISC is last 3 bits. Set to 011.
 	SREG |= (1<<GLOBAL_INT_ENABLE); //Enable Interrupts
-	
-	
-	 
 	 /* Enable Global Interrupts */
 	 sei();
-	
+
 	//Initial state
 	State.currentState = OFF;
 	LightState.currentState = OFF;
 	NECState.currentState = IDLE;
+	
 	//RTC initialize
-	
-	
 	RTC.CLKSEL = RTC_CLKSEL_INT32K_gc;//32.768 kHz RTC
 	while (RTC.STATUS > 0); 
 	RTC.PER = 4;  // 122 us per tick
 	RTC.INTCTRL |= RTC_OVF_bm; 
 	RTC.CTRLA = RTC_PRESCALER_DIV1_gc|RTC_RTCEN_bm | RTC_RUNSTDBY_bm;   
-	//OVF set 1
-	
-	
-	
-	
-
-	
 }
 /************************************************************************/
 /* First 2 bytes are address decimals. They are "129" and "102" in decimal
@@ -175,12 +167,24 @@ bool VerifyAddress(){
 	if((command_register & 0xFFFF0000) == ADDRESS_bm)
 	return true;
 	else return false;
-	
 }
 void GenerateRepeatCode(){
 	tick_counter=0;
+	hold_counter++;
+	if(InputState.currentState==POWER || InputState.currentState==POWER_HOLD){
+		InputState.currentState=POWER_HOLD;
+		
+	}
+	else if(InputState.currentState==INCREMENT || InputState.currentState==INCREMENT_HOLD){
+		
+	}
+	else if(InputState.currentState==DECREMENT ||InputState.currentState==DECREMENT_HOLD){
+		
+	}
+	else if(InputState.currentState==LIGHT || InputState.currentState==LIGHT_HOLD){
+		
+	}
 }
-
 /************************************************************************/
 /* This functions decodes incoming command. There are 4 different commands which are;
 POWER, INCREMENT, DECREMENT and  LIGHT. There can also be REPEAT code which happens when the button 
