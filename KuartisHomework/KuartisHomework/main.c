@@ -49,8 +49,9 @@ int main(void)
 	*/
 	PORTD.DIR = (1<<LED_ON_OFF);
 	PORTD.OUT = 0x00; // Close All LEDs
-	Initialize();
 	CPUINT.LVL1VEC = RTC_CNT_vect_num;
+	Initialize();
+	
 	//Test_One();
 	
     while (1) 

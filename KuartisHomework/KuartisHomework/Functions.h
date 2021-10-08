@@ -178,6 +178,7 @@ bool VerifyAddress(){
 	
 }
 void GenerateRepeatCode(){
+	tick_counter=0;
 }
 
 /************************************************************************/
@@ -352,21 +353,47 @@ void IR_Read(){
 			while(((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 9000){
 				
 			}
+			counter = 0;
 			cli();
 			RTC.CNT = 0;
 			sei();
-			counter = 0;
+			
 			while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 4500){
 				
 			}
-			counter = 0;
+			if(counter*RTC_TICK <= 2300){
+				//Repeat Case
+				counter = 0;
+				disableRTC();//reset timer
+				enableRTC();
+				cli();
+				RTC.CNT = 0;
+				sei();
+				counter = 0;
+				while(((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 600){
+					//end of message
+				}
+				
+				GenerateRepeatCode();
+				
+				counter=0;
+				idle_flag=0;
+				cli();
+				RTC.CNT = 0;
+				sei();
+				
+				enableIR_ISR();
+				break;
+			}
+			
+		
 			cli();
 			RTC.CNT = 0;
 			sei();
 			counter = 0;
 			idle_flag=0;
 			command_counter_flag=1;
-			for(i=0;i<32;i++){
+			for(i=0;i<33;i++){
 				tick_counter=0;
 				while(((PORTA.IN & (1<<IR_INPUT)) == 0)&&tick_counter*RTC_TICK<=650){
 					//loop until next space
@@ -378,7 +405,9 @@ void IR_Read(){
 				while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&&tick_counter*RTC_TICK<=1800){
 					//loop until next pulse
 				}
-				
+				if(i==32 && tick_counter*RTC_TICK> 1000){//end of message
+					break;
+				}
 				if( tick_counter*RTC_TICK> 1000)   {                            
 					command_register = command_register<<1;   
 					command_register |= 0x01;
@@ -389,29 +418,22 @@ void IR_Read(){
 					tick_counter=tick_counter;
 				}
 				
+				
 				cli();
 				RTC.CNT = 0;
 				sei();
 				
 			}
 			//wait for end bit. It is a inverse pulse for 500 us
-			
-			tick_counter=0;
-			cli();
-			disableRTC();//reset timer
-			enableRTC();
-			RTC.CNT = 0;
-			sei();
-			while(((PORTA.IN & (1<<IR_INPUT)) == 0)&&tick_counter*RTC_TICK<=650){
-				
-			}
-			
-		
 			//If any signal comes in 40ms it is repeat
 			//If not go to idle case.
 			
 			if(VerifyAddress()){
 				DecodeCommand();
+			}
+			//wait for 30ms to process and reset,
+			while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&& counter*RTC_TICK <= 20000){
+				
 			}
 			//reset the process
 			//wait for 40ms to read repeat
