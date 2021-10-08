@@ -66,85 +66,18 @@ int main(void)
 
 ISR(PORTA_PORT_vect){
 	NECState.currentState = COMMAND;
-	IR_Read();
-	
-	 //  disable interrupt 
+	IR_Read(); 
 }
 ISR(RTC_CNT_vect){
 	 RTC.INTFLAGS = RTC_OVF_bm;
 	 
 	if(idle_flag == 1){
 		counter++;
-		/*
-		if((PORTA.IN & (1<<IR_INPUT)) == 0){
-			
-			if(counter*RTC_TICK >= 9500){//aproxx 9ms worth of tick
-				counter = 0;
-				disableIR_ISR();
-				//disable RTC 
-				disableRTC();
-				NECState.currentState = START;
-				IR_Read();
-					
-			}*/
 		}
 	if(command_counter_flag==1){
 			
 				tick_counter++;
-				total_tick_counter++;
-			
+				total_tick_counter++;	
 		}
 	
 }
-
-/*
-ISR(TCA0_OVF_vect){
-	
-
-	TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm;
-	//IDLE to START case
-	if(idle_flag==1){
-		
-		
-		counter++;
-		if(counter>=20000){
-			counter=0;
-		}
-		
-		
-		if((PORTA.IN & (1<<IR_INPUT)) == 0){
-			counter++;
-			if(counter>=8){
-				NECState.currentState = START;
-				idle_flag=0;
-				TCA0.SINGLE.INTCTRL &= ~TCA_SINGLE_OVF_bm;
-				IR_Read();
-				counter = 0;
-			}
-		}
-		else{
-			//start_counter = 0;//if signal is less than 9ms, reset counter and flag;
-			//idle_flag=0;
-		}
-		
-	}
-	//AFTER START
-	if(NECState.currentState == COMMAND){
-		
-		if(command_counter_flag==1){
-			IR_Read();
-			tick_counter++;
-			total_tick_counter++;
-			if(total_tick_counter>= 54000 ){
-				command_counter_flag = 0;
-				command_register = 0x0000;
-			}
-			
-		}
-		
-	}
-	//TCA0.SINGLE.CNT = 0;
-
-}
-	*/
-

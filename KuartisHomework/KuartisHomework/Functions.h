@@ -59,6 +59,10 @@ typedef enum{
 	LIGHT_REPEAT
 	}REPEAT_STATE;
 /************************************************************************/
+/* Enumerator for boolean type                                                                     */
+/************************************************************************/
+typedef enum {false, true} bool;
+/************************************************************************/
 /* This struct holds the current state of the light.                                                                     */
 /************************************************************************/
 typedef struct LIGHT_STATE_INFO{
@@ -101,11 +105,23 @@ int32_t volatile counter = 0;
 int start_counter=0;
 volatile int16_t idle_flag = 0;
 volatile int16_t command_counter_flag=0;
-volatile int16_t tick_counter = 0;
+volatile int32_t tick_counter = 0;
 volatile int16_t total_tick_counter = 0;
 volatile int32_t command_register = 0x0000;
 volatile int32_t bit_counter = 0;
 volatile int16_t i;
+
+//Function Prototypes
+void Initialize();
+bool VerifyAddress();
+void DecodeCommand();
+void disableIR_ISR();
+void enableIR_ISR();
+void disableRTC();
+void enableRTC();
+void setState();
+void WriteInput();
+void GenerateRepeatCode();
 void Initialize(){
 	//Initialize LEDs
 	sei();
@@ -148,6 +164,53 @@ void Initialize(){
 	
 	
 
+	
+}
+/************************************************************************/
+/* First 2 bytes are address decimals. They are "129" and "102" in decimal
+We need to verify this decimals, because different remotes can send IR signals also.
+This function verifies first two bytes. Returns "1" if the address are true, "0" if false.                                                                   */
+/************************************************************************/
+bool VerifyAddress(){
+	if((command_register & 0xFFFF0000) == ADDRESS_bm)
+	return true;
+	else return false;
+	
+}
+void GenerateRepeatCode(){
+}
+
+/************************************************************************/
+/* This functions decodes incoming command. There are 4 different commands which are;
+POWER, INCREMENT, DECREMENT and  LIGHT. There can also be REPEAT code which happens when the button 
+is held down.Functions changes the current state of InputState instance.                                                                     */
+/************************************************************************/
+void DecodeCommand(){
+	if((command_register&0x0000FFFF)==IR_POWER_bm){
+		InputState.currentState = POWER;
+		WriteInput();
+		setState();
+		return;
+	}
+	else if((command_register&0x0000FFFF)==IR_MINUS_bm){
+		InputState.currentState = DECREMENT;
+		WriteInput();
+		setState();
+		return;
+	}
+	else if ((command_register&0x0000FFFF)==IR_PLUS_bm){
+		InputState.currentState = INCREMENT;
+		WriteInput();
+		setState();
+		return;
+	}
+	else if((command_register&0x0000FFFF)==IR_LIGHT_bm){
+		InputState.currentState = LIGHT;
+		WriteInput();
+		setState();
+		return;
+	}
+	else return;
 	
 }
 
@@ -276,50 +339,9 @@ state of the INPUT_STATE                                                        
 void IR_Read(){
 	//If the signal is HIGH for 9ms, this means we are in START.
 	switch(NECState.currentState){
-		
-		/*
-		case(IDLE):
-			idle_flag=1;
-			cli();
-			RTC.CNT = 0;
-			sei();
-			break;*/
-			/*
-		case(START):
-			enableIR_ISR();
-			NECState.currentState = COMMAND;
-			break;
-			*/
-			/*
-		case(ADDRESS):
-			
-			break;
-		case(ADDRESS_INV):
-		
-			break;
-			*/
 			
 		case(COMMAND):
-		/*
-		for(k = 0; k < 32; k++){
-			SET_TIMER1(0);
-			count = 0;
-			while(!input(IR_Sensor) && (count < 650))
-				count = GET_TIMER1();
-			if((count > 649) || (count < 500))
-				return 0;
-			count = 0;
-			SET_TIMER1(0);
-			while((input(IR_Sensor)) && (count < 1800))
-			count = GET_TIMER1();
-			if( (count > 1799) || (count < 400))
-			return 0;
-			if( count > 1000)                                 // If space width > 1ms
-			bit_set(code, (31 - k));                        // Write 1 to bit (31 - k)
-			else                                              // If space width < 1ms
-			bit_clear(code, (31 - k));                      // Write 0 to bit (31 - k)
-		}
-		*/
+		
 			idle_flag=1;
 			cli();
 			RTC.CNT = 0;
@@ -372,27 +394,56 @@ void IR_Read(){
 				sei();
 				
 			}
-			/*
-			if(tick_counter*RTC_TICK >= 1000 && tick_counter*RTC_TICK <= 1300){
-				//clear timer
-				disableRTC();
-				command_register = command_register<<1;//0 added
-				enableRTC();bit_counter++;
-			}
-			else if (tick_counter*RTC_TICK >= 2000 && tick_counter*RTC_TICK <= 2400){
-				disableRTC();
-				command_register = command_register<<1;
-				command_register |= 0x01;//0 added
-				enableRTC();bit_counter++;
-			}
-			enableIR_ISR();
+			//wait for end bit. It is a inverse pulse for 500 us
 			
-			if(bit_counter==32){
-				bit_counter=0;
-				NECState.currentState=END;
+			tick_counter=0;
+			cli();
+			disableRTC();//reset timer
+			enableRTC();
+			RTC.CNT = 0;
+			sei();
+			while(((PORTA.IN & (1<<IR_INPUT)) == 0)&&tick_counter*RTC_TICK<=650){
+				
 			}
+			
+		
+			//If any signal comes in 40ms it is repeat
+			//If not go to idle case.
+			
+			if(VerifyAddress()){
+				DecodeCommand();
+			}
+			//reset the process
+			//wait for 40ms to read repeat
+			/*
+			tick_counter=0;
+			cli();
+			disableRTC();//reset timer
+			enableRTC();
+			RTC.CNT = 0;
+			sei();
 			*/
-			command_register = command_register<<1;
+			/*
+			while(!((PORTA.IN & (1<<IR_INPUT)) == 0)&&tick_counter*RTC_TICK<=80000){
+				//next pulse is longer than 80 ms means no repeat
+			}
+			
+			command_counter_flag=0;
+			if((tick_counter*RTC_TICK) <= 50000){
+				GenerateRepeatCode();
+				
+				tick_counter=0;
+			}
+			else{ 
+			}*/
+			
+			tick_counter=0;
+			cli();
+			RTC.CNT = 0;
+			sei();
+			
+			enableIR_ISR();
+			//disable timer in the end
 			break;
 		
 		case(END):
@@ -405,3 +456,6 @@ void IR_Read(){
 			break;
 	}
 }
+
+
+

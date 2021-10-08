@@ -58,3 +58,9 @@
 #define TIM0_MS         1
 #define TIM0_MS_FACTOR  ( (F_CPU) / (TIM0_PRESCALER) )
 #define TIM0_COMP_VAL   19534//(TIM0_MS * TIM0_MS_FACTOR)
+
+#define ADDRESS_bm  0x81660000 //129-102
+#define IR_POWER_bm 0x0000817E //129-inv 129
+#define IR_PLUS_bm	0x0000A15E //133-inv 133
+#define IR_MINUS_bm 0x000051AE //138-inv138
+#define IR_LIGHT_bm 0x00009966 //153-inv 153
