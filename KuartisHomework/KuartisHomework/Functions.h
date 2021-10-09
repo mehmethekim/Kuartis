@@ -1,5 +1,6 @@
 #include <avr/interrupt.h>
 #define RTC_TICK 122
+#include "Buzzer.h"
 //Functions
 /************************************************************************/
 /* Initializes LEDs and MOTOR ports. Sets the initial state to START State                                                                     */
@@ -116,6 +117,7 @@ volatile int32_t hold_counter = 0;
 volatile int16_t hold_flag = 0;
 volatile int32_t boost_timer =0;
 volatile int32_t boost_total_timer = 0;
+volatile int32_t dev_mode_flag = 0;
 
 //Function Prototypes
 void Initialize();
@@ -303,12 +305,18 @@ void WriteInput(){
 		case(POWER):
 			if(State.currentState == OFF){
 				State.currentState = ONE;
+				BuzzerState.currentState= POWER_ON_SOUND;
+				Buzzer();
 			}
 			else{
 				State.currentState = OFF;
+				BuzzerState.currentState= POWER_OFF_SOUND;
+				Buzzer();
 			}
 			break;
 		case(INCREMENT):
+			BuzzerState.currentState= INC_SOUND;
+			Buzzer();
 			if(State.currentState==ONE){
 				State.currentState = TWO;
 			}
@@ -320,6 +328,8 @@ void WriteInput(){
 			}
 			break;
 		case(DECREMENT):
+			BuzzerState.currentState= DEC_SOUND;
+			Buzzer();
 			if(State.currentState==BOOST){
 				State.currentState = THREE;
 			}

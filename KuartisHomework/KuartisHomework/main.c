@@ -10,6 +10,7 @@
 #include "Functions.h"
 #include "StateDefinitions.h"
 #include "tests.h"
+
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #ifndef F_CPU
@@ -93,13 +94,33 @@ ISR(RTC_CNT_vect){
 	}
 	if(hold_flag==1){
 		hold_counter++;
-		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== POWER_HOLD){//After 4 sec, go to developer mode.
-				State.currentState = DEV_MODE;
+		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== POWER_HOLD){//After 4 sec power button press, indicate with buzzer and wait for 2 sec 
+				dev_mode_flag=1;
+				
+				
 				setState();
 		}
 		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== LIGHT_HOLD){
 			State.currentState = BRIGHT_ADJ;
 			setState();
+		}
+		if((hold_counter*RTC_TICK>=2*ONE_SEC)&&InputState.currentState== LIGHT_HOLD&&dev_mode_flag==1){
+			State.currentState = DEV_MODE;
+		}
+	}
+	if(BuzzerFlag==1){
+		BuzzerCounter++;
+		PORTD.OUT |= (1<<BUZZER); 
+		Buzzer();
+		
+		if(BuzzerCounter*RTC_TICK>=ONE_SEC/10){
+			BuzzerFlag=0;
+			BuzzerCounter=0;
+			Pitch_flag=0;
+			PORTD.OUT &= ~(1<<BUZZER); 
+		}
+		if(BuzzerCounter*RTC_TICK>=ONE_SEC/20){
+			Pitch_flag=1;
 		}
 	}
 }

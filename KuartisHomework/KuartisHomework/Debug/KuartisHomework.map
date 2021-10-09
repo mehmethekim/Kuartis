@@ -1,11 +1,17 @@
 Archive member included to satisfy reference by file (symbol)
 
+c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+                              main.o (__divmodsi4)
+c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+                              c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o) (__negsi2)
 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
                               C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o (exit)
 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_clear_bss.o)
                               main.o (__do_clear_bss)
 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o)
                               main.o (__muluhisi3)
+c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+                              c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o) (__udivmodsi4)
 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
                               c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o) (__umulhisi3)
 
@@ -18,6 +24,7 @@ RepeatState         0x1               main.o
 i                   0x2               main.o
 State               0x1               main.o
 NECState            0x1               main.o
+BuzzerState         0x1               main.o
 
 Discarded input sections
 
@@ -35,6 +42,34 @@ Discarded input sections
                 0x00000000        0x4 main.o
  .bss.start_counter
                 0x00000000        0x2 main.o
+ .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .text.libgcc   0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+ .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .text.libgcc   0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
  .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
@@ -81,6 +116,20 @@ Discarded input sections
                 0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o)
  .text.libgcc.fixed
                 0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o)
+ .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .text.libgcc   0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
  .text          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
  .data          0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
  .bss           0x00000000        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
@@ -224,7 +273,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0xa82
+.text           0x00000000      0xdd0
  *(.vectors)
  .vectors       0x00000000       0x90 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
                 0x00000000                __vector_default
@@ -317,57 +366,68 @@ END GROUP
                 0x000000b0                __vector_20
                 0x000000b2                . = ALIGN (0x2)
  *(.text.*)
+ .text.Buzzer   0x000000b2      0x17c main.o
+                0x000000b2                Buzzer
  .text.Initialize
-                0x000000b2       0x72 main.o
-                0x000000b2                Initialize
+                0x0000022e       0x72 main.o
+                0x0000022e                Initialize
  .text.VerifyAddress
-                0x00000124       0x24 main.o
-                0x00000124                VerifyAddress
+                0x000002a0       0x24 main.o
+                0x000002a0                VerifyAddress
  .text.GenerateRepeatCode
-                0x00000148       0x2c main.o
-                0x00000148                GenerateRepeatCode
+                0x000002c4       0x2c main.o
+                0x000002c4                GenerateRepeatCode
  .text.disableIR_ISR
-                0x00000174        0xa main.o
-                0x00000174                disableIR_ISR
+                0x000002f0        0xa main.o
+                0x000002f0                disableIR_ISR
  .text.enableIR_ISR
-                0x0000017e       0x14 main.o
-                0x0000017e                enableIR_ISR
+                0x000002fa       0x14 main.o
+                0x000002fa                enableIR_ISR
  .text.disableRTC
-                0x00000192       0x20 main.o
-                0x00000192                disableRTC
+                0x0000030e       0x20 main.o
+                0x0000030e                disableRTC
  .text.enableRTC
-                0x000001b2        0xc main.o
-                0x000001b2                enableRTC
+                0x0000032e        0xc main.o
+                0x0000032e                enableRTC
  .text.setState
-                0x000001be       0xc8 main.o
-                0x000001be                setState
+                0x0000033a       0xc8 main.o
+                0x0000033a                setState
  .text.WriteInput
-                0x00000286       0x96 main.o
-                0x00000286                WriteInput
+                0x00000402       0xb6 main.o
+                0x00000402                WriteInput
  .text.DecodeCommand
-                0x0000031c       0xa6 main.o
-                0x0000031c                DecodeCommand
- .text.IR_Read  0x000003c2      0x40e main.o
-                0x000003c2                IR_Read
- .text.main     0x000007d0       0x28 main.o
-                0x000007d0                main
+                0x000004b8       0xa6 main.o
+                0x000004b8                DecodeCommand
+ .text.IR_Read  0x0000055e      0x40e main.o
+                0x0000055e                IR_Read
+ .text.main     0x0000096c       0x28 main.o
+                0x0000096c                main
  .text.__vector_6
-                0x000007f8       0x4c main.o
-                0x000007f8                __vector_6
+                0x00000994       0x4c main.o
+                0x00000994                __vector_6
  .text.__vector_3
-                0x00000844      0x20e main.o
-                0x00000844                __vector_3
+                0x000009e0      0x344 main.o
+                0x000009e0                __vector_3
+ .text.libgcc.div
+                0x00000d24       0x28 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_divmodsi4.o)
+                0x00000d24                __divmodsi4
+ .text.libgcc.div
+                0x00000d4c       0x10 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_negsi2.o)
+                0x00000d4c                __negsi2
  .text.libgcc.mul
-                0x00000a52       0x14 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o)
-                0x00000a52                __muluhisi3
+                0x00000d5c       0x14 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_muluhisi3.o)
+                0x00000d5c                __muluhisi3
+ .text.libgcc.div
+                0x00000d70       0x44 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_udivmodsi4.o)
+                0x00000d70                __udivmodsi4
  .text.libgcc.mul
-                0x00000a66       0x18 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
-                0x00000a66                __umulhisi3
-                0x00000a7e                . = ALIGN (0x2)
+                0x00000db4       0x18 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_umulhisi3.o)
+                0x00000db4                __umulhisi3
+                0x00000dcc                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000a7e        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
-                0x00000a7e                _exit
-                0x00000a7e                exit
+ .fini9         0x00000dcc        0x0 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
+                0x00000dcc                _exit
+                0x00000dcc                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -386,16 +446,16 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000a7e        0x4 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
+ .fini0         0x00000dcc        0x4 c:/users/mehme/desktop/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3/short-calls\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000a82                _etext = .
+                0x00000dd0                _etext = .
 
 .rodata
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.r*)
 
-.data           0x00803c00        0x0 load address 0x00000a82
+.data           0x00803c00        0x0 load address 0x00000dd0
                 [!provide]                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -404,56 +464,69 @@ END GROUP
                 0x00803c00                _edata = .
                 [!provide]                PROVIDE (__data_end, .)
 
-.bss            0x00803c00       0x27
+.bss            0x00803c00       0x38
                 0x00803c00                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.boost_total_timer
+ .bss.dev_mode_flag
                 0x00803c00        0x4 main.o
-                0x00803c00                boost_total_timer
- .bss.boost_timer
+                0x00803c00                dev_mode_flag
+ .bss.boost_total_timer
                 0x00803c04        0x4 main.o
-                0x00803c04                boost_timer
+                0x00803c04                boost_total_timer
+ .bss.boost_timer
+                0x00803c08        0x4 main.o
+                0x00803c08                boost_timer
  .bss.hold_flag
-                0x00803c08        0x2 main.o
-                0x00803c08                hold_flag
+                0x00803c0c        0x2 main.o
+                0x00803c0c                hold_flag
  .bss.hold_counter
-                0x00803c0a        0x4 main.o
-                0x00803c0a                hold_counter
- .bss.command_register
                 0x00803c0e        0x4 main.o
-                0x00803c0e                command_register
+                0x00803c0e                hold_counter
+ .bss.command_register
+                0x00803c12        0x4 main.o
+                0x00803c12                command_register
  .bss.total_tick_counter
-                0x00803c12        0x2 main.o
-                0x00803c12                total_tick_counter
+                0x00803c16        0x2 main.o
+                0x00803c16                total_tick_counter
  .bss.tick_counter
-                0x00803c14        0x4 main.o
-                0x00803c14                tick_counter
+                0x00803c18        0x4 main.o
+                0x00803c18                tick_counter
  .bss.command_counter_flag
-                0x00803c18        0x2 main.o
-                0x00803c18                command_counter_flag
+                0x00803c1c        0x2 main.o
+                0x00803c1c                command_counter_flag
  .bss.idle_flag
-                0x00803c1a        0x2 main.o
-                0x00803c1a                idle_flag
- .bss.counter   0x00803c1c        0x4 main.o
-                0x00803c1c                counter
+                0x00803c1e        0x2 main.o
+                0x00803c1e                idle_flag
+ .bss.counter   0x00803c20        0x4 main.o
+                0x00803c20                counter
+ .bss.Pitch_flag
+                0x00803c24        0x4 main.o
+                0x00803c24                Pitch_flag
+ .bss.BuzzerCounter
+                0x00803c28        0x4 main.o
+                0x00803c28                BuzzerCounter
+ .bss.BuzzerFlag
+                0x00803c2c        0x4 main.o
+                0x00803c2c                BuzzerFlag
  *(COMMON)
- COMMON         0x00803c20        0x7 main.o
-                0x00803c20                LightState
-                0x00803c21                InputState
-                0x00803c22                RepeatState
-                0x00803c23                i
-                0x00803c25                State
-                0x00803c26                NECState
-                0x00803c27                PROVIDE (__bss_end, .)
-                0x00000a82                __data_load_start = LOADADDR (.data)
-                0x00000a82                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00803c30        0x8 main.o
+                0x00803c30                LightState
+                0x00803c31                InputState
+                0x00803c32                RepeatState
+                0x00803c33                i
+                0x00803c35                State
+                0x00803c36                NECState
+                0x00803c37                BuzzerState
+                0x00803c38                PROVIDE (__bss_end, .)
+                0x00000dd0                __data_load_start = LOADADDR (.data)
+                0x00000dd0                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00803c27        0x0
+.noinit         0x00803c38        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00803c27                _end = .
+                0x00803c38                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -518,38 +591,38 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x90
+.debug_aranges  0x00000000       0x98
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x90 main.o
+                0x00000000       0x98 main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3284
+.debug_info     0x00000000     0x3393
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x229c C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_info    0x0000229c      0xfe8 main.o
+ .debug_info    0x0000229c     0x10f7 main.o
 
-.debug_abbrev   0x00000000     0x232f
+.debug_abbrev   0x00000000     0x2319
  *(.debug_abbrev)
  .debug_abbrev  0x00000000     0x20c2 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_abbrev  0x000020c2      0x26d main.o
+ .debug_abbrev  0x000020c2      0x257 main.o
 
-.debug_line     0x00000000      0xae6
+.debug_line     0x00000000      0xc30
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x172 C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_line    0x00000172      0x974 main.o
+ .debug_line    0x00000172      0xabe main.o
 
-.debug_frame    0x00000000      0x1a0
+.debug_frame    0x00000000      0x1b0
  *(.debug_frame)
- .debug_frame   0x00000000      0x1a0 main.o
+ .debug_frame   0x00000000      0x1b0 main.o
 
-.debug_str      0x00000000     0x1732
+.debug_str      0x00000000     0x1803
  *(.debug_str)
  .debug_str     0x00000000      0xecd C:/Users/mehme/Desktop/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega808/avrxmega3/short-calls/crtatmega808.o
- .debug_str     0x00000ecd      0x865 main.o
-                                0x90e (size before relaxing)
+ .debug_str     0x00000ecd      0x936 main.o
+                                0x9df (size before relaxing)
 
 .debug_loc      0x00000000      0x523
  *(.debug_loc)
@@ -573,9 +646,9 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x80
+.debug_ranges   0x00000000       0x88
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x80 main.o
+ .debug_ranges  0x00000000       0x88 main.o
 
 .debug_macro
  *(.debug_macro)
