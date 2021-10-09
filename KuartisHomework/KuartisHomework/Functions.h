@@ -62,6 +62,21 @@ typedef enum{
 	LIGHT_REPEAT
 	}REPEAT_STATE;
 /************************************************************************/
+/* This enumerator holds the states for sweeping LEDs in developer mode.                                                                     */
+/************************************************************************/
+typedef enum{
+	DEV_ONE,
+	DEV_TWO,
+	DEV_THREE,
+	DEV_FOUR
+	}DEV_MODE_LIGHT_STATE;
+/************************************************************************/
+/*This structure hold the current state of LEDs in developer mode.                                                                   */
+/************************************************************************/
+typedef struct DEV_MODE_LIGHT_STATE_INFO{
+	DEV_MODE_LIGHT_STATE currentState;
+}DEV_MODE_LIGHT_STATE_INFO;
+/************************************************************************/
 /* Enumerator for boolean type                                                                     */
 /************************************************************************/
 typedef enum {false, true} bool;
@@ -104,6 +119,7 @@ INPUT_STATE_INFO InputState;
 STATE_INFO State;
 LIGHT_STATE_INFO LightState;
 REPEAT_STATE_INFO RepeatState;
+DEV_MODE_LIGHT_STATE_INFO DevModeLightState;
 int32_t volatile counter = 0;
 int start_counter=0;
 volatile int16_t idle_flag = 0;
@@ -118,6 +134,7 @@ volatile int16_t hold_flag = 0;
 volatile int32_t boost_timer =0;
 volatile int32_t boost_total_timer = 0;
 volatile int32_t dev_mode_flag = 0;
+volatile int32_t dev_mode_timer = 0;
 
 //Function Prototypes
 void Initialize();
@@ -181,13 +198,13 @@ void GenerateRepeatCode(){
 		
 	}
 	else if(InputState.currentState==INCREMENT || InputState.currentState==INCREMENT_HOLD){
-		
+		InputState.currentState=INCREMENT_HOLD;
 	}
 	else if(InputState.currentState==DECREMENT ||InputState.currentState==DECREMENT_HOLD){
-		
+		InputState.currentState=DECREMENT_HOLD;
 	}
 	else if(InputState.currentState==LIGHT || InputState.currentState==LIGHT_HOLD){
-		
+			InputState.currentState=LIGHT_HOLD;
 	}
 }
 /************************************************************************/
@@ -247,6 +264,36 @@ void enableRTC(){
 	
 	 
 }
+void DevModeBlink(){
+	switch(DevModeLightState.currentState){
+		case(DEV_ONE):
+			PORTA.OUT = 0xFF;
+			PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_2);
+			DevModeLightState.currentState = DEV_TWO;
+		break;
+		case(DEV_TWO):
+			PORTA.OUT = 0xFF;
+			PORTA.OUT &= ~(1<<LED_2) & ~(1<<LED_3);
+			DevModeLightState.currentState = DEV_THREE;
+			break;
+		case(DEV_THREE):
+			PORTA.OUT = 0xFF;
+			PORTA.OUT &= ~(1<<LED_3) & ~(1<<LED_4);
+			DevModeLightState.currentState = DEV_FOUR;
+			break;
+		case(DEV_FOUR):
+			PORTA.OUT = 0xFF;
+			PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_4);
+			DevModeLightState.currentState = DEV_ONE;	
+			break;
+		default:
+			DevModeLightState.currentState = DEV_ONE;
+			PORTA.OUT = 0xFF;
+			PORTA.OUT &= ~(1<<LED_1) & ~(1<<LED_4);
+			break;
+	}
+}
+
 void setState(){
 	
 	switch(State.currentState){
@@ -289,6 +336,9 @@ void setState(){
 			PORTA.OUT &= ~(1<<LED_1) & ~ (1<<LED_2) & ~ (1<<LED_3) & ~(1<<LED_4);
 			
 			PORTD.OUT |= (1<<MOTOR_RELAY_4);//OPEN MOTOR_4
+			break;
+		case(DEV_MODE):
+				DevModeBlink();
 			break;
 		default:
 			State.currentState = ONE; // In case of errors or out of state machine, go to state one.

@@ -94,11 +94,12 @@ ISR(RTC_CNT_vect){
 	}
 	if(hold_flag==1){
 		hold_counter++;
-		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== POWER_HOLD){//After 4 sec power button press, indicate with buzzer and wait for 2 sec 
+		if((hold_counter*RTC_TICK>=2*ONE_SEC)&&InputState.currentState== POWER_HOLD){//After 4 sec power button press, indicate with buzzer and wait for 2 sec 
 				dev_mode_flag=1;
+				BuzzerState.currentState = DEV_INIT_SOUND;
+				Buzzer();
+				InputState.currentState=POWER;
 				
-				
-				setState();
 		}
 		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== LIGHT_HOLD){
 			State.currentState = BRIGHT_ADJ;
@@ -106,6 +107,11 @@ ISR(RTC_CNT_vect){
 		}
 		if((hold_counter*RTC_TICK>=2*ONE_SEC)&&InputState.currentState== LIGHT_HOLD&&dev_mode_flag==1){
 			State.currentState = DEV_MODE;
+			BuzzerState.currentState = DEV_MODE_SOUND;
+			Buzzer();
+			dev_mode_flag=0;
+			//Close all lights at first;
+			setState();
 		}
 	}
 	if(BuzzerFlag==1){
@@ -121,6 +127,13 @@ ISR(RTC_CNT_vect){
 		}
 		if(BuzzerCounter*RTC_TICK>=ONE_SEC/20){
 			Pitch_flag=1;
+		}
+	}
+	if(State.currentState==DEV_MODE){
+		dev_mode_timer++;
+		if(dev_mode_timer*RTC_TICK>=ONE_SEC){
+			dev_mode_timer=0;
+			setState();
 		}
 	}
 }

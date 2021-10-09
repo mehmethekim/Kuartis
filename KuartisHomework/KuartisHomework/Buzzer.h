@@ -56,10 +56,14 @@ void Buzzer(){
 		
 			break;
 		case(DEV_INIT_SOUND):
-		
+			if(BuzzerCounter%10==0){
+				PORTD.OUT ^= (1<<BUZZER);
+			}
 			break;
 		case(DEV_MODE_SOUND):
-		
+			if(BuzzerCounter%2==0){
+				PORTD.OUT ^= (1<<BUZZER);
+			}
 			break;
 		case(LIGHT_ADJ_SOUND):
 		
