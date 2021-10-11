@@ -1,6 +1,7 @@
 #include <avr/interrupt.h>
 #define RTC_TICK 122
 #include "Buzzer.h"
+
 //Functions
 /************************************************************************/
 /* Initializes LEDs and MOTOR ports. Sets the initial state to START State                                                                     */
@@ -147,9 +148,14 @@ void enableRTC();
 void setState();
 void WriteInput();
 void GenerateRepeatCode();
+
+
 void Initialize(){
-	//Initialize LEDs
-	sei();
+	//Initialize USART;
+	/*
+	uart_init(9600);
+	sei();*/
+	//Initialize LEDs	
 	PORTA.DIR = (1<<LED_1) | (1<<LED_2) | (1<<LED_3) | (1<<LED_4) ;
 	PORTA.OUT = 0xFF; // Close All LEDs
 	
@@ -166,7 +172,7 @@ void Initialize(){
 	PORTA.PIN3CTRL |= 0b00000011; //SET ISC to 0x3 to have falling edge trigger. ISC is last 3 bits. Set to 011.
 	SREG |= (1<<GLOBAL_INT_ENABLE); //Enable Interrupts
 	 /* Enable Global Interrupts */
-	 sei();
+	
 
 	//Initial state
 	State.currentState = OFF;

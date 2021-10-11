@@ -9,7 +9,8 @@
 #include "PortDefinitions.h"
 #include "Functions.h"
 #include "StateDefinitions.h"
-#include "tests.h"
+//#include "tests.h"
+
 
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -30,6 +31,9 @@
 //Global Variables
 int volatile state = 0;
 int volatile debug_flag = 0;
+int volatile usart_count = 0 ;
+int volatile usart_flag = 0;
+volatile uint8_t data = 'A';
 int main(void)
 {
 	CCP = 0xD8;
@@ -38,25 +42,17 @@ int main(void)
     CLKCTRL.MCLKCTRLB = 0;
 	CCP = 0xD8;
 	CLKCTRL.MCLKLOCK =0x01;
-	/*
-	CCP = 0xD8;
-	CLKCTRL.MCLKLOCK =0x00;
-	CCP = 0xD8;
-	CLKCTRL.MCLKCTRLA = 0x00;
-	CCP = 0xD8;
-	CLKCTRL.MCLKCTRLB = 0x13;
-	CCP = 0xD8;
-	CLKCTRL.MCLKLOCK =0x01;
-	*/
 	PORTD.DIR = (1<<LED_ON_OFF);
 	PORTD.OUT = 0x00; // Close All LEDs
 	CPUINT.LVL1VEC = RTC_CNT_vect_num;
 	Initialize();
 	
+	
 	//Test_One();
 	
     while (1) 
     {
+	
 		
     }
 }
@@ -101,7 +97,7 @@ ISR(RTC_CNT_vect){
 				InputState.currentState=POWER;
 				
 		}
-		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== LIGHT_HOLD){
+		if((hold_counter*RTC_TICK>=4*ONE_SEC)&&InputState.currentState== LIGHT_HOLD&&dev_mode_flag==0){
 			State.currentState = BRIGHT_ADJ;
 			setState();
 		}
@@ -137,3 +133,4 @@ ISR(RTC_CNT_vect){
 		}
 	}
 }
+
