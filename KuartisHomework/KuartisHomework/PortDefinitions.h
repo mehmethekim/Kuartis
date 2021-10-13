@@ -38,21 +38,8 @@
 
 #define GLOBAL_INT_ENABLE 7 //SREG bit7
 
-
 //Buzzer
 #define BUZZER 7 //PORTD7
-
-//CLKSEL for prescalar calculations
-#define DIV8 0x3 // CLKSEL0 = 1 CLKSEL_1 = 1 CLKSEL_2 = 0
-/*
-#define TCA0_ENABLE 0
-#define CLKSEL_0 1
-#define CLKSEL_1 2
-#define CLKSEL_2 3
-
-//Timer interrupt enable CMP0
-#define CMP_0 4
-*/
 
 #define TIM0_PRESCALER  1024
 #define TIM0_MS         1
@@ -64,7 +51,6 @@
 #define IR_PLUS_bm	0x0000A15E //133-inv 133
 #define IR_MINUS_bm 0x000051AE //138-inv138
 #define IR_LIGHT_bm 0x00009966 //153-inv 153
-
 
 //Time Definitions
 #define BOOST_MAX_15MIN 900000000UL
