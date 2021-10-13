@@ -57,5 +57,6 @@ void Initialize(){
 	LightState.currentState = OFF;
 	NECState.currentState = IDLE;
 	InputState.currentState = INITIAL_STATE;
+	BrightModeState.currentState = ONE;
 	init_RTC();
 }

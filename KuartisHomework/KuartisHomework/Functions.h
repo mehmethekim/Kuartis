@@ -2,6 +2,7 @@
 #define RTC_TICK 122
 #include "Buzzer.h"
 #include "StateDefinitions.h"
+#include "BrigthnessMode.h"
 //Functions
 
 /************************************************************************/
@@ -201,6 +202,8 @@ void setState(){
 				DevModeBlink();
 			break;
 		case(BRIGHT_ADJ):
+				PORTA.OUT = 0xFF; // All LEDs OFF
+				PORTD.OUT = 0x00; // All MOTORs OFF
 				AdjustBrightness();
 			break;	
 		default:
@@ -239,6 +242,9 @@ void WriteInput(){
 			else if(State.currentState == THREE) {
 				State.currentState = BOOST;
 			}
+			else if(State.currentState==BRIGHT_ADJ){
+				incrementLight();
+			}
 			break;
 		case(DECREMENT):
 			BuzzerState.currentState= DEC_SOUND;
@@ -251,6 +257,9 @@ void WriteInput(){
 			}
 			else if(State.currentState == TWO) {
 				State.currentState = ONE;
+			}
+			else if(State.currentState==BRIGHT_ADJ){
+				decrementLight();
 			}
 			break;
 		case(LIGHT):
