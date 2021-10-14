@@ -1,7 +1,8 @@
 #include "PortDefinitions.h"
 
 /************************************************************************/
-/* Buzzer function outputs different sounds for different inputs from the remote controller                                                                     */
+/* This enumerator holds the states for Buzzer.
+Buzzer outputs different sounds for different inputs from the remote controller                                                                     */
 /************************************************************************/
 typedef enum{
 	POWER_ON_SOUND,
@@ -12,15 +13,24 @@ typedef enum{
 	DEV_INIT_SOUND,
 	DEV_MODE_SOUND,
 	LIGHT_ADJ_SOUND
-	
 	}BUZZER_SOUND;
+/************************************************************************/
+/* This structre holds the current state ofthe Buzzer.                                                                     */
+/************************************************************************/
 typedef struct BUZZER_SOUND_INFO{
 	BUZZER_SOUND currentState;
 	}BUZZER_SOUND_INFO;
+/************************************************************************/
+/* Global Variables                                                                     */
+/************************************************************************/
 BUZZER_SOUND_INFO BuzzerState;
 volatile int32_t BuzzerFlag = 0;
 volatile int32_t BuzzerCounter = 0;
 volatile int32_t Pitch_flag=0;
+/************************************************************************/
+/* Buzzer function gives different sounds according to the current state. Every button gives different sound.
+They also give different sounds according to the current mode.                                                                     */
+/************************************************************************/
 void Buzzer(){
 	BuzzerFlag=1;
 	switch(BuzzerState.currentState){

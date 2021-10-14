@@ -3,10 +3,9 @@
 #include "Buzzer.h"
 #include "StateDefinitions.h"
 #include "BrigthnessMode.h"
-//Functions
 
 /************************************************************************/
-/* Local State Variables                                                                     */
+/* Local Variables                                                                     */
 /************************************************************************/
 
 int32_t volatile counter = 0;
@@ -25,6 +24,8 @@ volatile int32_t boost_total_timer = 0;
 volatile int32_t dev_mode_flag = 0;
 volatile int32_t dev_mode_timer = 0;
 volatile int32_t bright_mode_counter = 0;
+volatile int32_t bright_mode_flag = 0;
+volatile int64_t bright_level = 0 ;
 
 //Function Prototypes
 
@@ -37,9 +38,6 @@ void enableRTC();
 void setState();
 void WriteInput();
 void GenerateRepeatCode();
-
-
-
 /************************************************************************/
 /* First 2 bytes are address decimals. They are "129" and "102" in decimal
 We need to verify this decimals, because different remotes can send IR signals also.
@@ -50,6 +48,9 @@ bool VerifyAddress(){
 	return true;
 	else return false;
 }
+/************************************************************************/
+/* Generates a repeat code. When a key is pressed, we enter to this function and change the current state to hold states.                                                                     */
+/************************************************************************/
 void GenerateRepeatCode(){
 	tick_counter=0;
 	hold_flag=1;
@@ -114,16 +115,25 @@ void enableIR_ISR(){
 	PORTA.PIN3CTRL |= 0b00000011;
 	RTC.CNT = 0;//reset counter
 }
+/************************************************************************/
+/* This function disables the RTC interrupt                                                                     */
+/************************************************************************/
 void disableRTC(){
 	RTC.CNT = 0;//reset counter
 	RTC.INTCTRL &= ~RTC_OVF_bm;
 	tick_counter = 0;
 }
+/************************************************************************/
+/* This function enables the RTC interrupt.                                                                     */
+/************************************************************************/
 void enableRTC(){
-	RTC.INTCTRL |= RTC_OVF_bm;
-	
-	 
+	RTC.INTCTRL |= RTC_OVF_bm; 
 }
+/************************************************************************/
+/* When we enter the developer mode, a light sequence can be observed. Every second,
+the consecutive lights are lit and the lights appear to be moving. Motors are closed in
+developer mode.                                                                     */
+/************************************************************************/
 void DevModeBlink(){
 	PORTD.OUT = 0x00; //Close all motors
 	switch(DevModeLightState.currentState){
@@ -154,9 +164,10 @@ void DevModeBlink(){
 			break;
 	}
 }
-
-void setState(){
-	
+/************************************************************************/
+/* Changes LED and motor behavior according to the current state.                                                                     */
+/************************************************************************/
+void setState(){	
 	switch(State.currentState){
 		case(OFF):
 			PORTA.OUT = 0xFF; // All LEDs OFF
@@ -278,9 +289,10 @@ void WriteInput(){
 }
 /************************************************************************/
 /* This function reads the Infrared input from the controller and changes the
-state of the INPUT_STATE                                                                    */
+state of the INPUT_STATE. This function includes the main algorithm to decode the incoming signal.
+After going to interrupt when a falling edge is received, we are disabling the IR ISR. We are decoding the signal
+according to the NEC protocol.                                                                  */
 /************************************************************************/
-//IR Read function to decode incoming signal.
 void IR_Read(){
 	//If the signal is HIGH for 9ms, this means we are in START.
 	switch(NECState.currentState){
@@ -386,8 +398,6 @@ void IR_Read(){
 				
 			}
 			if(counter*RTC_TICK >= 40000){
-				
-				
 				hold_flag=0;
 				hold_counter = 0;
 				if(InputState.currentState==POWER_HOLD){

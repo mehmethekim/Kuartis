@@ -8,6 +8,7 @@
 #include <avr/io.h>
 #include "PortDefinitions.h"
 #include "Functions.h"
+#include "EEPROM.h"
 #include "init.h"
 #include "interrupts.h"
 
@@ -17,11 +18,6 @@
 #ifndef F_CPU
 #define F_CPU 20000000UL // 20MHz Clock
 #endif
-
-//+/- light adjustment
-//Hold that value inside of the chip, maybe write it on EEPROM or ROM
-
-
 int main(void)
 {
 	Initialize();

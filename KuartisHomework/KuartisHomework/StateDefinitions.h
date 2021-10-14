@@ -85,7 +85,7 @@ typedef enum{
 /************************************************************************/
 typedef struct BRIGHT_MODE_STATE_INFO{
 	BRIGHT_MODE_STATE currentState;
-}BRIGHT_MODE_STATEE_INFO;
+}BRIGHT_MODE_STATE_INFO;
 /************************************************************************/
 /*This structure hold the current state of LEDs in developer mode.                                                                   */
 /************************************************************************/
@@ -135,5 +135,6 @@ STATE_INFO State;
 LIGHT_STATE_INFO LightState;
 REPEAT_STATE_INFO RepeatState;
 DEV_MODE_LIGHT_STATE_INFO DevModeLightState;
-BRIGHT_MODE_STATEE_INFO BrightModeState;
+BRIGHT_MODE_STATE_INFO BrightModeState;
+BRIGHT_MODE_STATE_INFO PreviousBrightModeState;
 

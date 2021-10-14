@@ -1,3 +1,7 @@
+/************************************************************************/
+/* This function simulates the current brightness level using 4 LEDs on the hood.
+To simulate we are counting to "10" in binary.                                                                  */
+/************************************************************************/
 void AdjustBrightness(){
 	switch(BrightModeState.currentState){
 		case(BRIGHT_ONE):
@@ -38,6 +42,10 @@ void AdjustBrightness(){
 		
 	}
 }
+/************************************************************************/
+/* This function increases the brightness level by 1. If we are at level 10,
+the level increases no more.                                                                     */
+/************************************************************************/
 void incrementLight(){
 	switch(BrightModeState.currentState){
 		case(BRIGHT_ONE):
@@ -75,6 +83,10 @@ void incrementLight(){
 				
 	}
 }
+/************************************************************************/
+/* This function decreases the brightness level by 1. If we are at level 1,
+the level decreases no more.                                                                     */
+/************************************************************************/
 void decrementLight(){
 	switch(BrightModeState.currentState){
 		case(BRIGHT_ONE):
